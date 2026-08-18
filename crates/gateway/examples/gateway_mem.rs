@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Gateway memory harness — measures the resident footprint of the real
 //! `ProtocolServer` (the served MCP path) at idle vs. after driving M complete
 //! sessions through its actual async tool methods (`protocol_start`,

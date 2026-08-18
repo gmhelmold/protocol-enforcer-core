@@ -1,4 +1,7 @@
-//! Acceptance tests for crash-recovery wiring (SPEC_crash_recovery.md).
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Acceptance tests for crash-recovery wiring.
 //!
 //! "In-memory session gone" simulation: `LEDGER_DIR` (`./ledger`) is a
 //! fixed path relative to the process cwd, so a real second-process restart

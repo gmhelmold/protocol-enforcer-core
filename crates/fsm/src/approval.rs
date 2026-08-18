@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! The `human_approval` gate (SPEC_human_approval.md): challenge issuance on
+//! The `human_approval` gate: challenge issuance on
 //! entry, signature verification on submit.
 //!
 //! This is the ONE place the enforcer stops being presence-only. Everywhere
@@ -99,7 +99,7 @@ pub(crate) fn check(
         };
     };
 
-    // `validate_profile` Rule 11 guarantees this key exists and parses, so a
+    // `validate_profile` guarantees this key exists and parses, so a
     // profile that reached the engine cannot land here — but a gate must never
     // pass on an absent key, so the fallback is a rejection, not an unwrap.
     let Some(pubkey) = sub.approver_pubkey.as_deref() else {
@@ -131,7 +131,7 @@ pub(crate) fn check(
 /// (same pattern as `transitions.rs`): it lives here, next to the rules it
 /// enforces, so the gate's decision and its ledger record cannot drift apart.
 impl<L: protocol_ledger::LedgerPort> crate::profile_engine::ProfileFsmEngine<L> {
-    /// SPEC_human_approval.md: the current sub is a `human_approval` gate.
+    /// Called when the current sub is a `human_approval` gate.
     /// Verify the submitted `approval_signature` against the profile's
     /// `approver_pubkey` for the challenge issued when the session entered this
     /// gate; advance exactly like a plain sub-state on success, refuse with a
@@ -166,7 +166,7 @@ impl<L: protocol_ledger::LedgerPort> crate::profile_engine::ProfileFsmEngine<L> 
                     serde_json::json!({}),
                 )?;
 
-                // SPEC_human_approval.md / issue #70 (security-audit FIX 3):
+                // issue #70 (security-audit FIX 3):
                 // bound the reject path. Without this an agent can spam garbage
                 // signatures forever — each one a fresh `ApprovalRejected`
                 // append — growing the ledger without limit while the same

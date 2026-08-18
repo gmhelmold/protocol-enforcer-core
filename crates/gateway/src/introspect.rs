@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Read-only profile introspection (SPEC_mcp_introspection.md).
+//! Read-only profile introspection.
 //!
 //! Backs the two additive, non-mutating MCP tools `protocol_profile_list`
 //! and `protocol_profile_show`. This module is deliberately **hook-blind**:
 //! it never takes a `protocol_library::Library`, never resolves a hook, and
 //! never emits a `hooks` field -- it serializes only the macro/sub-state
-//! structure the enforcer itself acts on (SPEC §"Passivity"). All listing
+//! structure the enforcer itself acts on (the passivity invariant). All listing
 //! and name-safety logic is delegated to `protocol_manifest::ProfileManager`
 //! (`list_profiles`/`load_profile`, which internally guards `is_safe_name`)
 //! rather than reimplemented here, so a `../`-style name is rejected by the
@@ -20,8 +20,7 @@ use protocol_manifest::ProfileManager;
 use protocol_types::profile::{Profile, SubStateDef};
 
 /// The profiles directory this gateway serves from: `PROTOCOL_PROFILES_DIR`
-/// if set, else `./profiles` -- matching the CLI/library convention
-/// (SPEC_mcp_introspection.md "Profiles directory").
+/// if set, else `./profiles` -- matching the CLI/library convention.
 pub(crate) fn profiles_dir() -> PathBuf {
     std::env::var("PROTOCOL_PROFILES_DIR")
         .map(PathBuf::from)
@@ -49,7 +48,7 @@ pub(crate) fn show(name: &str) -> Result<serde_json::Value, ErrorData> {
     Ok(profile_json(&profile))
 }
 
-/// Hook-blind structural serializer (SPEC_mcp_introspection.md): the exact
+/// Hook-blind structural serializer: the exact
 /// shape `{ name, version, description, pipeline: [ { state_id, name,
 /// enabled, sub_states: [ { id, name, type, criteria? } ] } ] }`. Deliberately
 /// does NOT take a `Library` and never reads/emits `.hooks` -- unlike the CLI

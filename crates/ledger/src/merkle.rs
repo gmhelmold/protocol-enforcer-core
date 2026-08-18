@@ -3,9 +3,9 @@
 //! RFC 6962 §2.1 / §2.1.1 Merkle Tree Hash and inclusion proofs over an ordered
 //! sequence of byte leaves. Pure functions, no I/O.
 //!
-//! See `docs/SPEC_transcript_notary.md` §2–§4 and ADR-40. The domain-separation
-//! prefixes (`0x00` for leaves, `0x01` for internal nodes) are mandatory: without
-//! them an internal node could be presented as a leaf (second-preimage). The
+//! The domain-separation prefixes (`0x00` for leaves, `0x01` for internal
+//! nodes) are mandatory: without them an internal node could be presented as
+//! a leaf (second-preimage). The
 //! Bitcoin duplicate-last-leaf variant is deliberately NOT used — it admits two
 //! distinct trees with one root (CVE-2012-2459).
 

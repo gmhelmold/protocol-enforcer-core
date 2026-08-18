@@ -1,14 +1,20 @@
 [package]
 name = "protocol-manifest"
-version = "0.1.1"
-license = "Apache-2.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Nested-profile loader and strict validator for the Protocol Enforcer."
+keywords = ["mcp", "validation", "yaml"]
+categories = ["config"]
 
 [dependencies]
 protocol-types = { path = "../types" }
 protocol-library = { path = "../library" }
 # The workspace's single Ed25519 + hex implementation. Used ONLY to check that a
-# `human_approval` sub-state's `approver_pubkey` is a usable key (Rule 11); a
+# `human_approval` sub-state's `approver_pubkey` is a usable key; a
 # second crypto crate here would be a second thing to keep correct.
 protocol-notary = { path = "../notary" }
 serde_yaml = { workspace = true }

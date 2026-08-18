@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! SPEC §2 wire-shape serializers: turn engine `StepView` values into the JSON
+//! MCP wire-shape serializers: turn engine `StepView` values into the JSON
 //! response bodies the MCP tools return. Split out of `server.rs` to keep it
 //! under the size cap. Mostly pure formatting; the two notary helpers at the
 //! bottom (`profile_sha256_of`, `transcript_root_best_effort`) do a single
@@ -74,7 +74,7 @@ pub(crate) fn macro_json(position: &Position, macro_name: &str) -> serde_json::V
     })
 }
 
-/// Wraps a `StepView` into the SPEC §2 `protocol_start` response shape
+/// Wraps a `StepView` into the `protocol_start` response shape
 /// (adds `session_id`, expands `macro{state_id,name}`, lowercases
 /// `session_state`).
 pub(crate) fn start_response_json(session_id: &str, view: &StepView) -> serde_json::Value {
@@ -87,7 +87,7 @@ pub(crate) fn start_response_json(session_id: &str, view: &StepView) -> serde_js
     })
 }
 
-/// Wraps a `StepView` into the SPEC §2 `protocol_submit_milestone` advance
+/// Wraps a `StepView` into the `protocol_submit_milestone` advance
 /// response shape.
 pub(crate) fn advance_response_json(view: &StepView) -> serde_json::Value {
     serde_json::json!({
@@ -99,7 +99,7 @@ pub(crate) fn advance_response_json(view: &StepView) -> serde_json::Value {
     })
 }
 
-/// Wraps a `StepView` into the SPEC_loopback.md `looped_back` response
+/// Wraps a `StepView` into the macro loop-back `looped_back` response
 /// shape. Deliberately NOT built on `advance_response_json` (which
 /// hardcodes `"advanced": true` -- a loop-back IS a rejection, criteria not
 /// met). `protocol_submit_milestone`'s docstring contract is
@@ -134,7 +134,7 @@ fn to_hex(bytes: &[u8]) -> String {
 }
 
 /// SHA-256 (lowercase hex) of the profile file bytes at `path` — the bytes that
-/// were actually loaded (SPEC_transcript_notary.md §5). Best-effort: a read
+/// were actually loaded. Best-effort: a read
 /// failure logs and yields `None` rather than failing the start/recovery, which
 /// would turn an audit feature into an availability regression. In practice the
 /// profile has just loaded, so the read succeeds.

@@ -100,7 +100,7 @@ impl ProfileEditor {
         })
     }
 
-    /// Set the macro's `loop` (`loop_state`) flag — SPEC_loopback.md.
+    /// Set the macro's `loop` (`loop_state`) flag, which gates macro loop-back.
     pub fn set_macro_loop(
         &self,
         name: &str,

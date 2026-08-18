@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Proof: the enforcer governs N concurrent sub-agent sessions independently.
 //!
 //! The Protocol Enforcer exists to force-order *sub-agents*' work, and the
@@ -6,7 +9,8 @@
 //! distinct `session_id`s) run against ONE `ProtocolServer` at the same time,
 //! their steps interleaved. Each is forced through its own state chain, and
 //! advancing one never moves another — session isolation is the property a
-//! multi-sub-agent orchestrator relies on. Deterministic, in-process, no LLM.
+//! driving client managing multiple sub-agents relies on. Deterministic,
+//! in-process, no LLM.
 
 use rmcp::handler::server::wrapper::Parameters;
 

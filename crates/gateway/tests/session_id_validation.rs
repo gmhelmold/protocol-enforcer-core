@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Gateway-owned regression tests for `protocol_start`'s client-supplied
 //! `session_id` sanitization (path-traversal -> arbitrary file write fix).
 //!

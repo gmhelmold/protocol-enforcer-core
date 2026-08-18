@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Hot-path performance benches for the ledger crate.
 //!
 //! Two things the enforcer pays for at runtime live here:

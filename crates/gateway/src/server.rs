@@ -2,14 +2,14 @@
 // Copyright 2026 Gustavo Schneiter
 //! Tier-1 MCP server surface for the Protocol Enforcer.
 //!
-//! Exposes the driving tools (SPEC_v3.md §2) — `protocol_start`,
+//! Exposes the driving tools — `protocol_start`,
 //! `protocol_submit_milestone`, `protocol_get_state`, and `protocol_store_artifact`
-//! (the enforcer-authored artifact offload + integrity gate, SPEC_v3 §9/FR-25) —
+//! (the enforcer-authored artifact offload + integrity gate) —
 //! plus the two read-only introspection tools
 //! (`protocol_profile_list`/`protocol_profile_show`, see `introspect.rs`), for 6 total.
 //!
 //! Drives `protocol_fsm::ProfileFsmEngine` (the nested macro/sub-state
-//! model, SPEC_v3 §3/§9). Session state is kept correct across concurrent
+//! model). Session state is kept correct across concurrent
 //! sessions by holding a registry of one `ProfileFsmEngine` per
 //! `session_id`, EACH behind its own [`std::sync::Mutex`] so concurrent calls
 //! that name the SAME session serialize while different sessions run in
@@ -18,7 +18,7 @@
 //! the ledger. This gateway RESOLVES NOTHING itself: rendering
 //! (`RenderedInjection`) is already done by the engine/library; the
 //! gateway only drives `start_session`/`submit_milestone`/`get_state` and
-//! serializes their results into the SPEC §2 wire shapes.
+//! serializes their results into the MCP wire shapes.
 
 use std::collections::HashMap;
 use std::path::Path;
@@ -176,9 +176,9 @@ impl ProtocolServer {
     /// The exact set of model-facing MCP tool NAMES this server exposes — the
     /// registry the model can `list`/`invoke`. Read straight off the same
     /// `tool_router` the MCP `list_tools` capability serves, so it is the model's
-    /// real tool surface, not a hand-kept copy. Used to assert the sound-genesis
-    /// oracle (`verify-fact` / the verify hook) is NEVER a callable tool (AC-38):
-    /// it runs only driver-side, off the model's reach.
+    /// real tool surface, not a hand-kept copy. Used to assert that a verify
+    /// hook (`verify-fact` or similar) is NEVER a callable tool: it runs only
+    /// driver-side, off the model's reach.
     pub fn model_facing_tool_names(&self) -> Vec<String> {
         self.tool_router
             .list_all()
@@ -190,7 +190,7 @@ impl ProtocolServer {
     /// Return the session's [`SharedEngine`] handle: a cache hit clones the
     /// `Arc` out of the registry (releasing the map lock immediately), and a
     /// cache miss rebuilds the engine from its on-disk ledger + sidecar
-    /// (SPEC_crash_recovery.md) and installs it. Recovery is double-checked: a
+    /// and installs it. Recovery is double-checked: a
     /// concurrent caller that recovered first wins the `entry`, and this call's
     /// own rebuilt engine is dropped — so a session is represented by exactly
     /// one `Arc<Mutex<..>>` and same-session calls serialize on it. A session
@@ -401,7 +401,7 @@ impl ProtocolServer {
         sessions.insert(session_id.clone(), Arc::new(std::sync::Mutex::new(engine)));
         drop(sessions);
 
-        // Best-effort crash-recovery sidecar (SPEC_crash_recovery.md §1): a
+        // Best-effort crash-recovery sidecar: a
         // failure here must NOT fail `protocol_start` -- recovery is
         // hardening, not a start-time hard dependency.
         if let Err(e) = write_sidecar_atomic(&session_id, &sidecar_manifest_path, &profile_version)
@@ -425,7 +425,7 @@ impl ProtocolServer {
         Parameters(req): Parameters<ProtocolSubmitMilestoneRequest>,
     ) -> Result<Json<serde_json::Value>, ErrorData> {
         // Get the session's own-locked engine (recovering from disk on a cache
-        // miss, SPEC_crash_recovery.md). The engine STAYS in the registry; the
+        // miss). The engine STAYS in the registry; the
         // per-session lock (taken inside the blocking closure below) serializes
         // concurrent same-session submissions, so a second call can never
         // recover a stale copy while this one is mid-flight.
@@ -492,7 +492,7 @@ impl ProtocolServer {
         Parameters(req): Parameters<ProtocolGetStateRequest>,
     ) -> Result<Json<serde_json::Value>, ErrorData> {
         // Get the session's own-locked engine (recovering from disk on a cache
-        // miss, SPEC_crash_recovery.md). Snapshot the `SessionState` under the
+        // miss). Snapshot the `SessionState` under the
         // per-session lock (a clone, so the guard is released before we replay
         // the ledger tail); the engine is never removed from the registry.
         let engine = self.get_or_recover(&req.session_id).await?;
@@ -507,7 +507,7 @@ impl ProtocolServer {
         Self::get_state_response(&req.session_id, &state)
     }
 
-    /// Builds the SPEC §2 `protocol_get_state` response, replaying the
+    /// Builds the `protocol_get_state` response, replaying the
     /// ledger tail. Split out so both the cache-hit and post-recovery paths
     /// share it.
     fn get_state_response(

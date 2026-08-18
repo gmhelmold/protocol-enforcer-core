@@ -1,5 +1,8 @@
-//! Unit tests for `protocol_manifest::validate_hooks` (SPEC_plugins.md
-//! WP-4, rules H1-H6). Hermetic: id-resolution cases use a fresh
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Unit tests for `protocol_manifest::validate_hooks`
+//! (rules H1-H6). Hermetic: id-resolution cases use a fresh
 //! `tempfile::TempDir` hook library; everything else uses inline defs.
 
 use std::collections::BTreeMap;
@@ -228,7 +231,7 @@ fn h7_verify_criteria_not_in_checklist_is_rejected() {
 
 #[test]
 fn h7_amended_clause_b_scratch_key_consumed_by_candidates_allowlist_passes() {
-    // Completion-model pattern (AC-12/23): the verify hook's verify_criteria
+    // Completion-model pattern: the verify hook's verify_criteria
     // are scratch-keys, NOT checklist criteria; a second hook on the SAME
     // sub-state declares them in its `candidates` allowlist arg — that is
     // the downstream consumption that makes the strip meaningful. Amended
@@ -475,7 +478,7 @@ fn collects_all_violations_not_just_first() {
 fn validate_profile_ignores_hooks_entirely() {
     // A profile whose only defect is a hook-rule violation (H2: unresolved
     // id) must pass the STRICT served-path validator untouched -- proving
-    // `validate_profile` never looks at `hooks` (SPEC_plugins.md C1).
+    // `validate_profile` never looks at `hooks` (passivity invariant, C1).
     // Structurally otherwise valid: one macro, trailing checklist sub-state.
     let href = href_id("definitely-does-not-exist", "1.0.0");
     let profile = profile_with(vec![href], SubStateType::Checklist, vec![]);

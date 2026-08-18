@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! FSM recovery module - replays the ledger to reconstruct SessionState exactly
-//! as the live `ProfileFsmEngine` would hold it in memory (SPEC_v3 §3/§6).
+//! as the live `ProfileFsmEngine` would hold it in memory.
 
 use crate::state::{SessionState, SessionStatus};
 use protocol_types::{FsmError, FsmEventType};
 
 /// Replay all events for `session_id` and fold them into a `SessionState`
-/// for the nested `ProfileFsmEngine` model (SPEC_v3 §3/§6), reconstructing
+/// for the nested `ProfileFsmEngine` model, reconstructing
 /// `position`/`status`/`macro_iteration` exactly as the live engine would
 /// hold them. Macro transitions (`MacroAdvanced`) only carry
 /// `from_macro`/`to_macro` — the new macro's first-enabled sub must be
@@ -142,7 +142,7 @@ pub fn recover_profile_session(
                 }
             }
             FsmEventType::MacroLoopedBack { to_sub, .. } => {
-                // SPEC_loopback.md: reposition to the loop target (macro
+                // Reposition to the loop target (macro
                 // unchanged) exactly as the live engine does in
                 // `apply_loop_back`. Do NOT reset macro_iteration /
                 // consecutive_identical_rejections / last_rejected_evidence_
@@ -158,7 +158,7 @@ pub fn recover_profile_session(
                     s.pending_approval = None;
                 }
             }
-            // SPEC_human_approval.md: the challenge is REPLAYED, never
+            // Human-approval recovery: the challenge is REPLAYED, never
             // regenerated. Recomputing it would mint a nonce the ledger never
             // witnessed and silently invalidate a signature a human may already
             // have produced against the original -- turning a crash into a
@@ -219,7 +219,7 @@ pub fn recover_profile_session(
     state.ok_or_else(|| FsmError::SessionNotFound(session_id.to_string()))
 }
 
-/// Gateway-facing recovery entry point (SPEC_crash_recovery.md §2): rebuild
+/// Gateway-facing recovery entry point: rebuild
 /// `session_id`'s `SessionState` by folding `self.ledger`'s events against
 /// `self.profile` (already loaded + normalized by `ProfileFsmEngine::new`),
 /// insert it into `self.sessions`, and return a reference. Used by the

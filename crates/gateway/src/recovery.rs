@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Crash-recovery cache-miss helper (SPEC_crash_recovery.md).
+//! Crash-recovery cache-miss helper.
 //!
 //! `ProtocolServer` keeps one `ProfileFsmEngine` per session in an
 //! in-memory map. When a session is missing from that map (process
@@ -10,7 +10,7 @@
 //! and `protocol_get_state` don't unconditionally 404 a session that is
 //! really still alive on disk.
 //!
-//! Passivity (SPEC_crash_recovery.md "Passivity"): this module re-loads the
+//! Passivity: this module re-loads the
 //! profile and revalidates it through the exact same strict
 //! `validate_profile` call `protocol_start` uses -- the identical served
 //! path. It never resolves, reads, or learns about hooks.

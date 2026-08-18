@@ -1,8 +1,14 @@
 [package]
 name = "protocol-contract"
-version = "0.1.1"
-license = "Apache-2.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "JSON-Schema output-contract validation for the Protocol Enforcer."
+keywords = ["json-schema", "validation"]
+categories = ["development-tools"]
 
 [dependencies]
 protocol-types = { path = "../types" }

@@ -1,4 +1,7 @@
-//! SPEC_loopback.md metrics acceptance tests (#6 `metrics_looped`, #10
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Macro loop-back metrics acceptance tests (#6 `metrics_looped`, #10
 //! `loop_then_fail_metrics_passed_false`), split out of `metrics_tests.rs`
 //! to keep that file under the 600-line cap (`scripts/check_loc.sh`).
 //! Deterministic: explicit `DateTime` timestamps only, never `Utc::now()`.
@@ -31,7 +34,7 @@ fn ev(
     }
 }
 
-/// A session with one macro loop-back (SPEC_loopback.md): `draft/s1`
+/// A session with one macro loop-back: `draft/s1`
 /// (execute, the loop target) is visited twice, `draft/chk1` is rejected
 /// once then looped, then re-visited and passes clean.
 fn looped_then_passed_session(session_id: &str) -> Vec<FsmEvent> {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! Rejection, loop-back gating, macro advancement, and final-macro completion
-//! for `ProfileFsmEngine` (SPEC_v3.md §9). Split out of `profile_engine.rs`
+//! for `ProfileFsmEngine`. Split out of `profile_engine.rs`
 //! (which keeps `start_session`/`submit_milestone`/`get_state` and the stepping
 //! primitives) to stay under the file-size cap. These are inherent methods on
 //! the same engine type; `submit_milestone` drives them.
@@ -119,7 +119,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
             });
         }
 
-        // SPEC_loopback.md: loop-back is the AND-gate of a global kill-switch
+        // Macro loop-back is the AND-gate of a global kill-switch
         // and a per-macro opt-in, checked AFTER both circuit breakers above
         // (a rejection that trips a breaker fails the session even with loop
         // enabled -- macro_iteration/oscillation are never reset). See
@@ -187,7 +187,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         }
 
         // Landing on the next macro's first sub-state issues its challenge when
-        // that sub-state is a `human_approval` gate (SPEC_human_approval.md).
+        // that sub-state is a `human_approval` gate.
         let (_, injected) = self.enter_sub(session_id, next_macro_idx, next_sub_idx, None)?;
         let status = self
             .sessions
@@ -210,7 +210,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         pos: &Position,
         output: Option<serde_json::Value>,
     ) -> Result<StepOutcome, FsmError> {
-        // SPEC_v3 §9: verify all offloaded artifacts' integrity BEFORE validating
+        // Verify all offloaded artifacts' integrity BEFORE validating
         // the output contract; a tampered blob keeps the session on the final
         // state rather than completing.
         self.verify_session_artifacts(session_id)?;
@@ -277,7 +277,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
 
         // Every artifact tracked on the session must verify before the
         // session may complete. The nested `submit_milestone` signature
-        // (SPEC_v3 §9) has no artifact-registration path yet, so this set
+        // has no artifact-registration path yet, so this set
         // is empty today; the check stays here as the enforcement point the
         // moment artifacts are tracked.
         let destination = contract.destination.replace("{session_id}", session_id);

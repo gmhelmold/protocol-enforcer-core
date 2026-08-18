@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Human-approval signatures (SPEC_human_approval.md) — the *runtime* sibling
+//! Human-approval signatures — the *runtime* sibling
 //! of the transcript-root witness in this crate's root module.
 //!
 //! Same custody story, different object: there the witness signs a finished

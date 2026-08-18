@@ -1,5 +1,8 @@
-//! Engine-level acceptance for the `human_approval` gate
-//! (SPEC_human_approval.md), driven through the real `ProfileFsmEngine` against
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Engine-level acceptance for the `human_approval` gate,
+//! driven through the real `ProfileFsmEngine` against
 //! a real on-disk ledger — the same shape `recovery.rs`'s in-crate test uses.
 //!
 //! What each test pins down:

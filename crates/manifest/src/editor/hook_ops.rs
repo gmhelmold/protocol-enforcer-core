@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! Hook (`HookRef`) attach/detach verbs for `ProfileEditor`
-//! (SPEC_plugins.md WP-4) -- mirrors `injection_ops.rs`'s shape.
+//! -- mirrors `injection_ops.rs`'s shape.
 //!
 //! Every verb here goes through the same validate-on-write + atomic-write +
 //! CAS path as the rest of `ProfileEditor`, but ADDITIONALLY runs
@@ -9,7 +9,7 @@
 //! a malformed or unresolvable hook is rejected and nothing is written.
 //! `validate_hooks` itself is a separate function from the strict
 //! served-path `validate_profile` (passivity invariant, C1) -- this module
-//! is one of its two callers (the other is the driver, WP-3).
+//! is one of its two callers (the other is the driving client).
 
 use protocol_types::hooks::HookRef;
 use protocol_types::profile::Profile;

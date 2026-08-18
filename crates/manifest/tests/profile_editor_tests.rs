@@ -1,5 +1,8 @@
-//! Acceptance tests for `ProfileEditor` (SPEC_config_layer.md WP-A, editing
-//! core only -- CLI/UX verbs are WP-A2 and out of scope here).
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Acceptance tests for `ProfileEditor` (editing
+//! core only -- CLI/UX verbs are out of scope here).
 //!
 //! Hermetic: every test runs against a fresh `tempfile::TempDir`, so the
 //! repo-tracked `profiles/` directory is never touched.
@@ -199,8 +202,8 @@ fn roundtrip_all_shipped_profiles_semantically_unchanged() {
         }
     }
     // The open-core repo ships the six general-purpose profiles (default,
-    // quick-bug-fix, human-gate-demo, research, tdd_feature, hacked); the
-    // experimental genesis-* profiles are not part of this repository.
+    // quick-bug-fix, human-gate-demo, research, tdd_feature, mutated-clone);
+    // the experimental genesis-* profiles are not part of this repository.
     // `human-gate-demo.yaml` makes this roundtrip cover the `approver_pubkey` /
     // `approval_prompt` fields against a real shipped file.
     assert_eq!(names.len(), 6, "expected 6 shipped profiles");

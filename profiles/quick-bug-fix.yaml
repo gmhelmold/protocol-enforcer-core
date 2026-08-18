@@ -1,13 +1,13 @@
 ###############################################################################
 # PROFILE: quick-bug-fix
-# Clonado de: default
-# Perfil simplificado para correções rápidas - apenas 3 fases
+# Cloned from: default
+# Simplified profile for quick fixes - only 3 phases
 #
-# Como criar novo perfil:
-#   1. Copie este arquivo
-#   2. Mude o 'name'
-#   3. Adicione/remova/reordene states do pipeline
-#   4. Salve em profiles/<nome>.yaml
+# How to create a new profile:
+#   1. Copy this file
+#   2. Change the 'name'
+#   3. Add/remove/reorder pipeline states
+#   4. Save as profiles/<name>.yaml
 ###############################################################################
 
 name: "quick-bug-fix"
