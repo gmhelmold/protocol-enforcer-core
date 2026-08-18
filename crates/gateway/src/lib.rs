@@ -3,6 +3,7 @@
 //! Protocol gateway crate - MCP Gateway (stdio transport)
 
 pub mod error_map;
+pub(crate) mod hook_advisory;
 pub(crate) mod introspect;
 pub(crate) mod paths;
 mod recovery;

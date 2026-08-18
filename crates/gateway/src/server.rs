@@ -352,6 +352,8 @@ impl ProtocolServer {
             if let Err(violations) = protocol_manifest::validate_profile(&profile, &library) {
                 return Err(manifest_invalid_error(violations));
             }
+            // Passivity invariant advisory -- split into `hook_advisory.rs`.
+            crate::hook_advisory::warn_if_hooks_inert(&profile, &sid);
             let version = profile.version.clone();
             let ledger = Ledger::new(&sid, &ledger_dir()).map_err(|e| {
                 ErrorData::internal_error(format!("Ledger init failed: {}", e), None)
