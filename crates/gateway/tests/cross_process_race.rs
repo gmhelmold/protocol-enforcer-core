@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Real cross-PROCESS validation of the two `protocol_start` hardening changes
 //! (PR #44), driving actual spawned `protocol-gateway` binaries over genuine
 //! MCP stdio — NOT the in-process `ProtocolServer` the unit tests use. The

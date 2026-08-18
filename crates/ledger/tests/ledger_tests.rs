@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 use chrono::Utc;
 use serde_json::json;
 use std::fs;

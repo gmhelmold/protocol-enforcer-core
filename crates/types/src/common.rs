@@ -31,9 +31,9 @@ pub struct OutputContract {
     pub destination: String,
 }
 
-/// Runtime session state for the nested (macro/sub-state) model
-/// (SPEC_v3 §1.1 end-state). The flat engine's `current_step`/`iteration`/
-/// `context` fields were retired in WP6 along with the flat served path.
+/// Runtime session state for the nested (macro/sub-state) model. An earlier
+/// flat engine's `current_step`/`iteration`/`context` fields were retired
+/// along with the flat served path; this is the sole session-state shape now.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionState {
     pub session_id: String,
@@ -63,7 +63,7 @@ pub struct SessionState {
     #[serde(default)]
     pub artifacts: HashMap<String, ArtifactRef>,
     /// The live challenge for the `human_approval` sub-state this session is
-    /// parked on, or `None` anywhere else (SPEC_human_approval.md). Set when
+    /// parked on, or `None` anywhere else. Set when
     /// the engine ENTERS such a sub-state and cleared when it leaves; on
     /// recovery it is replayed from the `ApprovalChallengeIssued` ledger event,
     /// never regenerated — a fresh nonce after a crash would invalidate a
@@ -72,8 +72,8 @@ pub struct SessionState {
     pub pending_approval: Option<ApprovalChallenge>,
 }
 
-/// A challenge nonce bound to one entry into one `human_approval` sub-state
-/// (SPEC_human_approval.md). `challenge` is 32 random bytes in lowercase hex;
+/// A challenge nonce bound to one entry into one `human_approval` sub-state.
+/// `challenge` is 32 random bytes in lowercase hex;
 /// the position fields pin the signature to this exact gate, so a signature
 /// harvested for one gate cannot be replayed at another.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -83,8 +83,7 @@ pub struct ApprovalChallenge {
     pub challenge: String,
 }
 
-/// A position within the canonical macro-state/sub-state pipeline
-/// (SPEC_v3 §1.1).
+/// A position within the canonical macro-state/sub-state pipeline.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Position {
     pub macro_id: String,

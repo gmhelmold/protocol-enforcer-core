@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Skill/protocol library resolver (SPEC_v3 §5).
+//! Skill/protocol library resolver.
 //!
 //! Resolves reusable skill/protocol content by name from a directory tree:
 //! `<root>/skills/<name>.md`, `<root>/protocols/<name>.md`.
@@ -127,7 +127,7 @@ impl Library {
 
     /// List every resolvable name under `kind`'s sub-directory (file stems
     /// of the `.md` entries), sorted. Used by the CLI's "did you mean?"
-    /// suggestions (SPEC_config_layer.md zero-friction UX) — a read-only
+    /// suggestions (zero-friction UX) — a read-only
     /// enumeration, never on the served/validation path. An unreadable or
     /// missing directory yields an empty list rather than an error.
     pub fn list_names(&self, kind: LibKind) -> Vec<String> {

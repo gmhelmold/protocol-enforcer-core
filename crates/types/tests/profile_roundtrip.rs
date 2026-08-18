@@ -1,6 +1,8 @@
-//! WP0 round-trip test: every checked-in profile YAML must deserialize into
-//! the promoted `protocol_types::Profile` (SPEC_v3 §1/§1.1) with a
-//! non-empty pipeline.
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Round-trip test: every checked-in profile YAML must deserialize into
+//! `protocol_types::Profile` with a non-empty pipeline.
 
 use protocol_types::Profile;
 use std::path::PathBuf;
@@ -33,11 +35,11 @@ fn default_profile_round_trips() {
 }
 
 #[test]
-fn hacked_profile_round_trips() {
-    let profile = load("hacked");
+fn mutated_clone_profile_round_trips() {
+    let profile = load("mutated-clone");
     assert!(
         !profile.pipeline.is_empty(),
-        "hacked.yaml pipeline must be non-empty"
+        "mutated-clone.yaml pipeline must be non-empty"
     );
 }
 

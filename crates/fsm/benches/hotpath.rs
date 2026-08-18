@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Hot-path performance benches for the enforcer engine.
 //!
 //!   (a) profile load + validate — `load_profile` (YAML read+parse) followed by

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Real-wire user journey for the artifact-offload feature: spawn the actual
 //! `protocol-gateway` binary and drive a full session over the genuine MCP stdio
 //! transport (raw `rmcp` client, no in-process shortcut), calling every tool by

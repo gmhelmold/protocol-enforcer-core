@@ -1,4 +1,7 @@
-//! SPEC_loopback.md validator acceptance tests (Rules 9/10 -- #7
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Macro loop-back validator acceptance tests (Rules 9/10 -- #7
 //! `validate_loop_without_execute`, #7b `validate_loop_on_final_macro`, #13
 //! `validate_loop_execute_disabled` -- plus the profile-compat check), split
 //! out of `profile_validator_tests.rs` to keep that file under the 600-line
@@ -21,7 +24,7 @@ fn load(yaml: &str) -> protocol_types::Profile {
 }
 
 // ---------------------------------------------------------------------
-// Rules 9/10 (SPEC_loopback.md): loop_state structural validation.
+// Rules 9/10: loop_state structural validation.
 // ---------------------------------------------------------------------
 
 #[test]
@@ -174,15 +177,15 @@ pipeline:
     assert!(validate_profile(&profile, &fixture_library()).is_ok());
 }
 
-/// SPEC_loopback.md profile-compat check: all 5 shipped `profiles/*.yaml`
+/// Profile-compat check: all 5 shipped `profiles/*.yaml`
 /// must still validate clean under the new Rules 9/10 (`default.yaml`'s
 /// `loop: true` execute macro has execute subs and isn't final;
-/// `hacked.yaml`/`quick-bug-fix.yaml` mirror that same shape).
+/// `mutated-clone.yaml`/`quick-bug-fix.yaml` mirror that same shape).
 #[test]
 fn all_shipped_profiles_validate_clean_under_loop_rules() {
     let names = [
         "default.yaml",
-        "hacked.yaml",
+        "mutated-clone.yaml",
         "quick-bug-fix.yaml",
         "research.yaml",
         "tdd_feature.yaml",

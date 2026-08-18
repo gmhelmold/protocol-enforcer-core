@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Protocol FSM crate - core finite state machine (nested profile model,
-//! SPEC_v3 §3). The flat `FsmEngine`/`ProductionFsmEngine` over `ManifestIR`
-//! was retired in WP6 — `ProfileFsmEngine` is the sole served-path engine.
+//! Protocol FSM crate - core finite state machine (nested profile model).
+//! `ProfileFsmEngine` is the sole served-path engine.
 
 pub mod approval;
 pub mod config;

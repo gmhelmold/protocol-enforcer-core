@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Loop-back application (SPEC_loopback.md), split out of
+//! Loop-back application, split out of
 //! `profile_engine.rs::reject_checklist` to keep that file under the 600
 //! LOC cap (`scripts/check_loc.sh`). A second `impl<L: LedgerPort>
 //! ProfileFsmEngine<L>` block, same crate, same type -- Rust allows the

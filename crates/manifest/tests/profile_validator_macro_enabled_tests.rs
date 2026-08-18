@@ -1,4 +1,7 @@
-//! SPEC_config_layer.md "Macro-level `enabled` — normalize at load"
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Macro-level `enabled`, normalized at load:
 //! validator acceptance tests: at-least-one-enabled-macro, and the CRITICAL
 //! case where disabling the true last macro promotes a `loop: true` middle
 //! macro to final. Split out of `profile_validator_loop_tests.rs` to keep
@@ -53,7 +56,7 @@ pipeline:
     );
 }
 
-/// SPEC_config_layer.md CRITICAL case: disabling the true last macro (`gamma`)
+/// CRITICAL case: disabling the true last macro (`gamma`)
 /// promotes the middle `loop: true` macro (`beta`) to the normalized final
 /// macro. Rule 10 (keyed off the NORMALIZED pipeline) must catch this even
 /// though `beta` is not the last macro in the raw/on-disk pipeline.

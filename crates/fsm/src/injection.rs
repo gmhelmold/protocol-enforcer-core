@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! Injection rendering + checklist presence-rule helpers for
-//! `ProfileFsmEngine` (SPEC_v3.md §2, §3, WP3). Split out of
-//! `profile_engine.rs` to keep both files under the 600 LOC cap; these are
-//! pure, stateless helpers with no `&mut self`.
+//! `ProfileFsmEngine`. Split out of `profile_engine.rs` to keep both files
+//! under the 600 LOC cap; these are pure, stateless helpers with no
+//! `&mut self`.
 
 use protocol_library::{LibKind, Library};
 use protocol_types::{ChecklistEvidence, FsmError, Position, StateDef, SubStateDef};
 
-/// A rendered injection for the sub-state the caller is now at (SPEC_v3
-/// §2/§9). `skill_ref`/`protocol_ref` carry the *name* referenced by the
+/// A rendered injection for the sub-state the caller is now at.
+/// `skill_ref`/`protocol_ref` carry the *name* referenced by the
 /// sub-state's `inject` (for traceability); `rendered` is the resolved,
 /// concatenated content in fixed order prompt → skill → protocol → context.
 #[derive(Debug, Clone, PartialEq)]
@@ -19,8 +19,8 @@ pub struct RenderedInjection {
     pub protocol_ref: Option<String>,
     pub context: Option<String>,
     pub rendered: String,
-    /// The live challenge nonce for a `human_approval` sub-state
-    /// (SPEC_human_approval.md), `None` on every other type. Rendering is pure
+    /// The live challenge nonce for a `human_approval` sub-state,
+    /// `None` on every other type. Rendering is pure
     /// and stateless, so this is filled in by the engine (which owns the
     /// session and the ledger) right after the render, not here.
     pub approval_challenge: Option<String>,
@@ -29,7 +29,7 @@ pub struct RenderedInjection {
     pub approval_prompt: Option<String>,
 }
 
-/// The presence rule (SPEC_v3 §3): present AND not `null`, `""`
+/// The presence rule: present AND not `null`, `""`
 /// (whitespace-only counts as empty), `[]`, or `{}`.
 pub(crate) fn is_present(value: &serde_json::Value) -> bool {
     match value {
@@ -41,8 +41,7 @@ pub(crate) fn is_present(value: &serde_json::Value) -> bool {
     }
 }
 
-/// Every `criteria` entry not present-per-`is_present` in `evidence`
-/// (SPEC_v3 §3).
+/// Every `criteria` entry not present-per-`is_present` in `evidence`.
 pub(crate) fn missing_criteria(criteria: &[String], evidence: &ChecklistEvidence) -> Vec<String> {
     criteria
         .iter()
@@ -52,7 +51,7 @@ pub(crate) fn missing_criteria(criteria: &[String], evidence: &ChecklistEvidence
 }
 
 /// First `enabled` sub-state's index. The Checklist sub can never be
-/// disabled (SPEC §4 validation), so a valid profile always has one.
+/// disabled (enforced by `validate_profile`), so a valid profile always has one.
 pub(crate) fn first_enabled_index(macro_def: &StateDef) -> Result<usize, FsmError> {
     macro_def
         .sub_states
@@ -66,7 +65,7 @@ pub(crate) fn first_enabled_index(macro_def: &StateDef) -> Result<usize, FsmErro
         })
 }
 
-/// First enabled sub-state's index of type `Execute` (SPEC_loopback.md: the
+/// First enabled sub-state's index of type `Execute` (the
 /// macro loop-back target). Thin wrapper over the shared
 /// `StateDef::first_enabled_execute_index` (which also backs the
 /// validator's Rule 9/10, see `protocol_types::StateDef` for why the
@@ -75,7 +74,7 @@ pub(crate) fn first_enabled_execute_index(macro_def: &StateDef) -> Option<usize>
     macro_def.first_enabled_execute_index()
 }
 
-/// Resolve + render a macro's loop-back target (SPEC_loopback.md): the
+/// Resolve + render a macro's loop-back target: the
 /// macro's first enabled Execute sub-state. Returns the new `Position` and
 /// its rendered injection. Callers (the engine) are expected to only invoke
 /// this for a macro that validation already guaranteed has such a sub-state;
@@ -115,9 +114,9 @@ pub(crate) fn next_enabled_index(macro_def: &StateDef, from_idx: usize) -> usize
 }
 
 /// Merge `initial_context` (start_session only) into a sub-state's base
-/// `inject.context`, string-appending its pretty-printed JSON. Resolves a
-/// SPEC §3 ambiguity: the spec says "merge into that sub's rendered
-/// context" without prescribing a shape; append is deterministic and lossless.
+/// `inject.context`, string-appending its pretty-printed JSON. The contract
+/// is "merge into that sub's rendered context" without prescribing a shape;
+/// append is deterministic and lossless.
 fn merge_initial_context(
     base: Option<String>,
     initial: Option<&serde_json::Value>,
@@ -133,7 +132,7 @@ fn merge_initial_context(
     }
 }
 
-/// Render a sub-state's injection (SPEC_v3 §2): resolve `inject.skill` /
+/// Render a sub-state's injection: resolve `inject.skill` /
 /// `inject.protocol` against the library, fall back to the macro's
 /// `system_prompt` when the sub has no `inject`, and concatenate in fixed
 /// order prompt → skill → protocol → context.

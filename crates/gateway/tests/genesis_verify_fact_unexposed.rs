@@ -1,14 +1,14 @@
-//! SPIKE-1 WP-H1c · AC-38 — `verify-fact` (and the verify/attest hooks) is ABSENT
-//! from the model-facing tool MANIFEST: the model cannot list or invoke it. This
-//! is the OTHER half of passivity from AC-21 (`genesis_sound_manifest.rs`): AC-21
-//! pins that a PROFILE's structural view hides the verify wiring; AC-38 pins that
-//! the fixed MCP tool REGISTRY the model drives never contains the oracle as a
-//! callable tool at all. Two distinct surfaces — a hidden-in-profile hook could
-//! still, in principle, be a registered tool; this test forecloses that.
-//!
-//! The oracle is a hook (a driver-side shell command), never an MCP tool, so it is
-//! structurally impossible for it to appear here — this test makes that guarantee
-//! explicit and regression-proof.
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! A profile can wire a checklist criterion to a verify hook — a driver-side
+//! shell command that checks a fact and produces evidence for that criterion.
+//! Hooks like that are never MCP tools: the model can only see and call the
+//! fixed tool set the gateway registers (`protocol_start`,
+//! `protocol_submit_milestone`, …), never an arbitrary hook by name. This test
+//! pins that guarantee: it asserts the model-facing tool manifest carries the
+//! fixed tools and carries nothing that looks like a verify/attest hook or
+//! oracle under any spelling, so a hook can never become a callable tool.
 
 use protocol_gateway::server::ProtocolServer;
 
@@ -32,7 +32,7 @@ fn ac38_verify_fact_is_absent_from_the_model_facing_tool_manifest() {
         );
     }
 
-    // AC-38: NONE of the tools is the verify-fact oracle, the verify hook, or the
+    // NONE of the tools is the verify-fact oracle, the verify hook, or the
     // attest hook — under any spelling. The model cannot list or invoke them.
     for forbidden in [
         "verify-fact",
@@ -47,7 +47,7 @@ fn ac38_verify_fact_is_absent_from_the_model_facing_tool_manifest() {
     ] {
         assert!(
             !tools.iter().any(|t| t.to_lowercase().contains(forbidden)),
-            "AC-38: '{forbidden}' must NOT be a model-facing tool: {tools:?}"
+            "'{forbidden}' must NOT be a model-facing tool: {tools:?}"
         );
     }
 }

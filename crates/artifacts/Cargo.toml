@@ -1,8 +1,14 @@
 [package]
 name = "protocol-artifacts"
-version = "0.1.1"
-license = "Apache-2.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Content-addressed artifact offload store for the Protocol Enforcer."
+keywords = ["content-addressed", "sha256", "storage"]
+categories = ["filesystem"]
 
 [dependencies]
 protocol-types = { path = "../types" }

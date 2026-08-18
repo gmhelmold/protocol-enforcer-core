@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! `ProfileEditor` — the editing core (SPEC_config_layer.md WP-A).
+//! `ProfileEditor` — the editing core.
 //!
 //! A single typed mutation API that is the ONLY path allowed to mutate a
-//! profile. The CLI (WP-A2, not implemented here) and any future
+//! profile. The CLI (not implemented here) and any future
 //! programmatic builder are thin skins over this. Every mutation method
 //! follows the same contract: load (via the hardened, name-sanitized
 //! `ProfileManager::load_profile` path) -> apply the in-memory mutation ->
@@ -443,7 +443,7 @@ mod tests {
         Library::new(dir.path())
     }
 
-    /// SPEC_config_layer.md `EditError::Conflict`: if the on-disk file
+    /// `EditError::Conflict`: if the on-disk file
     /// changes between this editor's load and its save (simulated here by
     /// tampering with the file from inside the mutate closure itself --
     /// standing in for "a second editor landed a write concurrently"), the

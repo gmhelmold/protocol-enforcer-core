@@ -1,7 +1,10 @@
-//! Per-rule tests for the strict nested-profile validator (SPEC_v3 §4, WP1).
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
+//! Per-rule tests for the strict nested-profile validator.
 //!
-//! Each rule gets a passing case plus at least one failing fixture, per the
-//! WP1 DoD. `load_profile`/`validate_profile` are exercised together.
+//! Each rule gets a passing case plus at least one failing fixture.
+//! `load_profile`/`validate_profile` are exercised together.
 
 use protocol_library::Library;
 use protocol_manifest::{load_profile, validate_profile};

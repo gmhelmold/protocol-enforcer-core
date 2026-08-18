@@ -130,7 +130,7 @@ impl Ledger {
         &self.path
     }
 
-    /// Byte-exact transcript leaves for notarization (SPEC §1, NOT-2): the
+    /// Byte-exact transcript leaves for notarization (NOT-2): the
     /// file's raw bytes split on `0x0A`, dropping zero-length segments. Every
     /// other byte is kept verbatim — including `\r`, including invalid UTF-8,
     /// including a torn final line left by a crash.

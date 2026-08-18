@@ -2,11 +2,9 @@
 // Copyright 2026 Gustavo Schneiter
 //! Profile system - data-driven state machine configuration
 //!
-//! Promoted from `protocol-agent` (WP0, SPEC_v3 §1/§1.1) so the profile
-//! model is a shared type available to the fsm/gateway crates without a
-//! dependency on the agent crate. `ProfileManager` (CRUD over the
-//! filesystem) stays in `protocol-agent`; this module holds only the
-//! serde-facing data shapes.
+//! The profile model is a shared type available to the fsm/gateway crates.
+//! `ProfileManager` (CRUD over the filesystem) lives in `protocol-manifest`;
+//! this module holds only the serde-facing data shapes.
 
 use crate::common::OutputContract;
 use serde::{Deserialize, Serialize};
@@ -36,7 +34,7 @@ pub struct ProfileSettings {
     /// circuit breaker. Read by `ProfileFsmEngine::reject_checklist`.
     #[serde(default = "default_oscillation")]
     pub oscillation_detection_threshold: u32,
-    /// Master switch for macro loop-back (SPEC_loopback.md); AND-gated with a
+    /// Master switch for macro loop-back; AND-gated with a
     /// macro's `loop_state`. Read by `ProfileFsmEngine::reject_checklist`.
     #[serde(default = "default_auto_loop")]
     pub auto_loop_on_checklist_failure: bool,
@@ -141,7 +139,7 @@ impl StateDef {
     }
 
     /// The index of this macro's first `enabled` sub-state of type
-    /// `Execute` (SPEC_loopback.md: the loop-back target). Lives here, on
+    /// `Execute` (the loop-back target). Lives here, on
     /// the shared `StateDef` type, rather than duplicated in
     /// `protocol-fsm`/`protocol-manifest`, so the engine's loop-back
     /// target and the validator's Rule 9/10 checks can never drift: `fsm`
@@ -172,9 +170,9 @@ pub struct SubStateDef {
     pub inject: Option<Injection>,
     #[serde(default)]
     pub verify: Option<Vec<VerifyCheck>>,
-    /// Hex-encoded Ed25519 **public** key of the human approver
-    /// (SPEC_human_approval.md). REQUIRED on a `human_approval` sub-state and
-    /// forbidden on every other type — `validate_profile` Rule 11 hard-fails
+    /// Hex-encoded Ed25519 **public** key of the human approver.
+    /// REQUIRED on a `human_approval` sub-state and
+    /// forbidden on every other type — `validate_profile` hard-fails
     /// both directions, so a gate can never silently degrade into an
     /// unverifiable one (a missing key would otherwise leave nothing to check
     /// the signature against).
@@ -191,9 +189,9 @@ pub struct SubStateDef {
 
 /// A client-side (trusted driver) verification check bound to a checklist
 /// criterion. The enforcer/fsm ignores this entirely (presence-only stays
-/// unchanged); it is consumed by the orchestrator driver, which runs the
-/// command and derives the criterion's evidence from the real result
-/// instead of trusting whatever the LLM claims.
+/// unchanged); it is consumed by the driving client, which runs the command
+/// and derives the criterion's evidence from the real result instead of
+/// trusting whatever the LLM claims.
 ///
 /// `criterion` must name one of the sub-state's declared `criteria`
 /// (enforced by `validate_profile`, Rule 8) — otherwise the check would be a
@@ -222,7 +220,7 @@ pub enum SubStateType {
     /// A gate an AI agent cannot satisfy on its own: advancing past it requires
     /// an Ed25519 signature, produced by a human holding the profile's
     /// `approver_pubkey`, over a challenge the engine issued on entry
-    /// (SPEC_human_approval.md). Unlike `checklist`, presence is NOT enough —
+    /// Unlike `checklist`, presence is NOT enough —
     /// this is the one sub-state type whose evidence the enforcer verifies
     /// cryptographically rather than merely observes.
     HumanApproval,
@@ -299,14 +297,14 @@ impl Profile {
         cloned
     }
 
-    /// SPEC_config_layer.md "Macro-level `enabled` — normalize at load": a
+    /// Macro-level `enabled`, normalized at load: a
     /// clone whose `pipeline` keeps only `enabled` macros, everything else
     /// identical. Pure (does not mutate `self`) and transient/in-memory
     /// only — callers that persist a `Profile` (e.g.
     /// `ProfileManager::save_profile`) must NEVER call this first, or a
     /// disabled macro would be silently stripped from disk. Apply this only
     /// where a `Profile` becomes a stepping/navigation structure
-    /// (`ProfileFsmEngine::new`, the orchestrator driver's own copy), so
+    /// (`ProfileFsmEngine::new`, the driving client's own copy), so
     /// `pipeline.first()`/`.last()`/`[idx+1]`/`len()-1` are already correct
     /// with zero further logic changes.
     pub fn with_enabled_macros_only(&self) -> Profile {
@@ -385,8 +383,8 @@ mod tests {
     }
 }
 
-/// Declarative injection directive for an `inject`-type sub-state
-/// (SPEC_v3 §1.1). All fields optional; a profile author fills in
+/// Declarative injection directive for an `inject`-type sub-state.
+/// All fields optional; a profile author fills in
 /// whichever source(s) the sub-state should pull from.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Injection {

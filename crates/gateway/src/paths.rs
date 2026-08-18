@@ -38,13 +38,13 @@ pub(crate) fn ledger_path(session_id: &str) -> PathBuf {
     ledger_dir().join(format!("{}.jsonl", session_id))
 }
 
-/// The on-disk sidecar path for `session_id`
-/// (SPEC_crash_recovery.md §1): `<ledger_dir>/<session_id>.manifest.json`.
+/// The on-disk sidecar path for `session_id`:
+/// `<ledger_dir>/<session_id>.manifest.json`.
 pub(crate) fn sidecar_path(session_id: &str) -> PathBuf {
     ledger_dir().join(format!("{}.manifest.json", session_id))
 }
 
-/// Atomically write the crash-recovery sidecar (SPEC_crash_recovery.md §1):
+/// Atomically write the crash-recovery sidecar:
 /// write to `<path>.tmp` then `rename` over the final path, so a reader
 /// never observes a torn file. Best-effort: the caller logs and continues
 /// on failure rather than failing `protocol_start` -- recovery is hardening,

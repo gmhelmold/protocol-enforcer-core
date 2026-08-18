@@ -2,8 +2,8 @@
 // Copyright 2026 Gustavo Schneiter
 //! Profile system - data-driven state machine configuration
 //!
-//! WP0: the data shapes (`Profile`, `ProfileSettings`, `StateDef`,
-//! `SubStateDef`, `SubStateType`, `Injection`) now live in
+//! The data shapes (`Profile`, `ProfileSettings`, `StateDef`,
+//! `SubStateDef`, `SubStateType`, `Injection`) live in
 //! `protocol_types::profile` as the shared type foundation. This module
 //! re-exports them and keeps the filesystem CRUD (`ProfileManager`).
 
@@ -254,7 +254,7 @@ impl ProfileManager {
                 ));
             }
 
-            // SPEC_loopback.md Rules 9/10, surfaced as authoring warnings
+            // Loop-back Rules 9/10, surfaced as authoring warnings
             // here (the strict, hard-fail versions live in
             // `protocol_manifest::validate_profile`, run at `protocol_start`).
             if state.loop_state {

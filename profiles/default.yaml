@@ -2,18 +2,18 @@
 # DEFAULT PROFILE - Protocol Enforcer v3.1
 # ⚠ This profile CANNOT be deleted or modified - use it as template for new profiles
 #
-# COMO EDITAR:
-#   - Adicionar estado: copie um bloco 'state:' e cole abaixo
-#   - Remover estado: delete o bloco inteiro
-#   - Mudar ordem: mude os blocos de lugar
-#   - Adicionar sub-state: adicione um item em 'sub_states:'
-#   - Mudar ordem sub-states: mude a ordem na lista
+# HOW TO EDIT:
+#   - Add a state: copy a 'state:' block and paste it below
+#   - Remove a state: delete the whole block
+#   - Change order: move the blocks around
+#   - Add a sub-state: add an item under 'sub_states:'
+#   - Change sub-state order: reorder the list
 #
-# TIPOS DE SUB-STATE:
-#   - inject       → Injeta contexto/prompt no modelo
-#   - execute      → Agente usa ferramentas Tier 3 livremente
-#   - review       → Agente revisa o próprio trabalho
-#   - checklist    → Engine valida critérios de saída (gate)
+# SUB-STATE TYPES:
+#   - inject       → Injects context/prompt into the model
+#   - execute      → Agent freely uses Tier 3 tools
+#   - review       → Agent reviews its own work
+#   - checklist    → Engine validates exit criteria (gate)
 #
 ###############################################################################
 
