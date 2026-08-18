@@ -2,3 +2,20 @@
 **/*.rs.bk
 Cargo.lock.bak
 .DS_Store
+
+# Keys and secrets that should never be committed
+*.key
+*.pem
+
+# Directories the demo/gateway create at runtime (PROTOCOL_LEDGER_DIR /
+# PROTOCOL_ARTIFACT_DIR defaults)
+/ledger
+.artifacts
+
+# Editor/IDE
+.idea/
+.vscode/
+
+# criterion benchmark output (target/ already covers target/criterion, but
+# some criterion configs write alongside it)
+/criterion

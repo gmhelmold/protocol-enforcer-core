@@ -1,8 +1,14 @@
 [package]
 name = "protocol-gateway"
-version = "0.1.1"
-license = "Apache-2.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "MCP stdio server exposing the Protocol Enforcer's forced state machine to AI agents."
+keywords = ["mcp", "agent", "stdio"]
+categories = ["development-tools"]
 
 [dependencies]
 protocol-types = { path = "../types" }

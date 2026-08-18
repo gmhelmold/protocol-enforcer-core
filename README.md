@@ -1,5 +1,8 @@
 # Protocol Enforcer — core
 
+[![CI](https://github.com/gmhelmold/protocol-enforcer-core/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gmhelmold/protocol-enforcer-core/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 A **passive, deterministic MCP server** that serves a **nested, force-ordered
 state machine** to external AI agents. The enforcer holds no LLM: it reveals the
 next step only after the current one is submitted, so an agent's attention is
@@ -13,6 +16,10 @@ model follows the protocol because at every moment it only has to.
 This repository is the **Apache-2.0 open core** — the enforcement engine and its
 served path. It builds and runs standalone. (The reference LLM orchestrator and
 the operator CLI are maintained separately and are not part of this repository.)
+
+This repository is an extraction of the enforcement engine from a longer-lived
+private monorepo — that's why the visible git history here is thin; the code
+itself is not new.
 
 ## Crates
 
@@ -53,6 +60,40 @@ Run the gateway as an MCP stdio server:
 ```bash
 cargo run -p protocol-gateway --bin protocol-gateway
 ```
+
+## Install / MCP client configuration
+
+Build the release binary, then point an MCP client at it over stdio:
+
+```bash
+cargo build --release -p protocol-gateway
+```
+
+```json
+{
+  "mcpServers": {
+    "protocol-enforcer": {
+      "command": "/absolute/path/to/target/release/protocol-gateway",
+      "env": {
+        "PROTOCOL_PROFILES_DIR": "/absolute/path/to/profiles",
+        "PROTOCOL_LEDGER_DIR": "/absolute/path/to/ledger",
+        "PROTOCOL_ARTIFACT_DIR": "/absolute/path/to/data"
+      }
+    }
+  }
+}
+```
+
+### Environment variables
+
+| Variable | Default | What it controls |
+|---|---|---|
+| `PROTOCOL_PROFILES_DIR` | unset (no confinement) | When set, confines path-mode `manifest_path` args to this directory (a bare profile *name* always resolves here too). |
+| `PROTOCOL_LEDGER_DIR` | `./ledger` | Where per-session ledger files (and their sidecars) are written and read from. |
+| `PROTOCOL_ARTIFACT_DIR` | `.` | Root under which the enforcer's own artifact store keeps `<root>/.artifacts/...`. |
+| `PROTOCOL_LIBRARY_DIR` | `./library` | Root for `inject.skill`/`inject.protocol` resolution (`<root>/skills/<name>.md`, `<root>/protocols/<name>.md`). |
+| `PROTOCOL_MANIFEST_STRICT` | unset (off) | Truthy (`1`/`true`) rejects a path-mode `manifest_path` outright — only a bare profile name is accepted. |
+| `PROTOCOL_NOTARY_SK` | unset | 32-byte Ed25519 signing seed (hex), read by the `notary-sign` binary — never by the gateway itself. Prefer this env form over `--key-seed` so the seed stays off argv. |
 
 ## Transcript notary
 

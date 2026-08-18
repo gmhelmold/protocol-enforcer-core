@@ -1,8 +1,14 @@
 [package]
 name = "protocol-notary"
-version = "0.1.1"
-license = "Apache-2.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+description = "Ed25519 transcript-root witness signing and human-approval gate primitives for the Protocol Enforcer."
+keywords = ["ed25519", "signing", "merkle"]
+categories = ["cryptography"]
 
 [lib]
 name = "protocol_notary"
