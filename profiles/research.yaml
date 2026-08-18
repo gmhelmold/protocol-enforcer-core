@@ -1,0 +1,118 @@
+###############################################################################
+# PROFILE: research
+# Perfil para pesquisa/exploração - sem implementação, só análise
+###############################################################################
+
+name: "research"
+version: "1.0.0"
+description: "Research & exploration - understand, analyze, report"
+protected: false
+created_at: "2024-01-15T00:00:00Z"
+
+settings:
+  oscillation_detection_threshold: 3
+  auto_loop_on_checklist_failure: false
+
+pipeline:
+
+  - state_id: explore
+    name: "Explore Codebase"
+    description: "Understand existing code and patterns"
+    enabled: true
+    max_iterations: 3
+    icon: "🔭"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject codebase overview"
+        enabled: true
+
+      - id: map
+        type: execute
+        name: "Map Structure"
+        description: "Understand file organization and dependencies"
+        enabled: true
+
+      - id: patterns
+        type: execute
+        name: "Identify Patterns"
+        description: "Find coding patterns and conventions"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - structure_mapped
+          - patterns_identified
+
+  - state_id: analyze
+    name: "Deep Analysis"
+    description: "Analyze specific areas in depth"
+    enabled: true
+    max_iterations: 3
+    icon: "🔬"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject exploration findings"
+        enabled: true
+
+      - id: deep_dive
+        type: execute
+        name: "Deep Dive"
+        description: "Analyze target areas in depth"
+        enabled: true
+
+      - id: review
+        type: review
+        name: "Self-Review"
+        description: "Verify analysis completeness"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - analysis_complete
+          - findings_documented
+
+  - state_id: report
+    name: "Report Findings"
+    description: "Synthesize and present findings"
+    enabled: true
+    max_iterations: 2
+    icon: "📊"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject analysis results"
+        enabled: true
+
+      - id: synthesize
+        type: execute
+        name: "Synthesize"
+        description: "Combine findings into coherent report"
+        enabled: true
+
+      - id: review
+        type: review
+        name: "Review Report"
+        description: "Self-review report quality"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - report_written
+          - conclusions_clear

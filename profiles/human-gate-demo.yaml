@@ -1,0 +1,84 @@
+###############################################################################
+# PROFILE: human-gate-demo
+#
+# The smallest profile that demonstrates a `human_approval` sub-state: do the
+# work, then stop dead until a HUMAN signs off. See docs/SPEC_human_approval.md.
+#
+# THE KEY BELOW IS A DEMO KEY. Its secret seed is the published, worthless value
+#   0707070707070707070707070707070707070707070707070707070707070707
+# so anyone can run this profile end to end:
+#   echo 0707...07 > /tmp/demo-approver.key
+#   protocol-enforcer approve --session <id> --macro approve \
+#       --sub-state human_gate --challenge <hex> --key /tmp/demo-approver.key
+#
+# For anything real: mint your own with `notary-keygen`, put the PUBLIC key
+# here, and keep the seed on the approver's machine — NOT on the agent's. If the
+# agent can read the seed, this gate degrades to presence-only.
+###############################################################################
+
+name: "human-gate-demo"
+version: "1.0.0"
+description: "Demo: an execute macro, then a gate only a human can open"
+protected: false
+created_at: "2026-08-16T00:00:00Z"
+
+settings:
+  oscillation_detection_threshold: 3
+  auto_loop_on_checklist_failure: true
+  global_timeout_seconds: 3600
+
+pipeline:
+
+  - state_id: execute
+    name: "Do The Work"
+    description: "The agent works freely; nothing here needs a human"
+    enabled: true
+    max_iterations: 3
+    icon: "🔧"
+
+    sub_states:
+      - id: work
+        type: execute
+        name: "Perform The Change"
+        description: "Make the change the session was started for"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Work Gate"
+        enabled: true
+        criteria:
+          - change_summary
+
+  - state_id: approve
+    name: "Human Approval"
+    description: "A person with the signing key decides whether this ships"
+    enabled: true
+    max_iterations: 5
+    icon: "🖊️"
+
+    sub_states:
+      - id: human_gate
+        type: human_approval
+        name: "Human Sign-Off"
+        description: "Blocked until a human signs the issued challenge"
+        enabled: true
+        # PUBLIC key only. Never put a seed in a profile.
+        approver_pubkey: "ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c"
+        approval_prompt: |
+          A change is ready to ship and needs your approval.
+
+          Review the agent's change summary, then, on YOUR machine:
+            protocol-enforcer approve \
+              --session <session_id> --macro approve --sub-state human_gate \
+              --challenge <challenge> --key <your-key-file>
+
+          Hand the printed signature back to the agent. Signing means you
+          reviewed it — the enforcer proves you signed, never that you looked.
+
+      - id: checklist
+        type: checklist
+        name: "Delivery Gate"
+        enabled: true
+        criteria:
+          - approved_by_human

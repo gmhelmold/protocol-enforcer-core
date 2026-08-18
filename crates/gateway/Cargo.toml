@@ -1,0 +1,33 @@
+[package]
+name = "protocol-gateway"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+protocol-types = { path = "../types" }
+protocol-manifest = { path = "../manifest" }
+protocol-ledger = { path = "../ledger" }
+protocol-artifacts = { path = "../artifacts" }
+protocol-fsm = { path = "../fsm" }
+protocol-contract = { path = "../contract" }
+protocol-library = { path = "../library" }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "sync"] }
+tracing = { workspace = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rmcp = { workspace = true, features = ["server", "macros", "schemars", "transport-io"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+schemars = { workspace = true }
+sha2 = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+uuid = { workspace = true }
+# The over-the-wire tests (artifact_wire, cross_process_race) drive a spawned
+# `protocol-gateway` child over stdio with an rmcp client. In the full product
+# these client-side features were feature-unified in via the reference
+# orchestrator (a dev-dependency there); standalone they must be declared here.
+rmcp = { workspace = true, features = ["client", "transport-child-process"] }
+tokio = { workspace = true, features = ["process"] }

@@ -1,0 +1,15 @@
+Protocol Enforcer — open core
+Copyright 2026 Gustavo Schneiter
+
+This product's open core is licensed under the Apache License, Version 2.0
+(see LICENSE-APACHE). The open core comprises the crates listed as CORE in
+LICENSING.md: protocol-types, protocol-ledger, protocol-contract,
+protocol-notary, protocol-artifacts, protocol-manifest, protocol-library,
+protocol-fsm, and protocol-gateway.
+
+Other components of this repository (the reference orchestrator and CLI, listed
+as SHELL in LICENSING.md) are NOT covered by the Apache License and are governed
+by the separate proprietary End User License Agreement in the LICENSE file.
+
+Portions of the transcript-notary design follow RFC 6962 (Certificate
+Transparency) for the Merkle tree hashing and inclusion-proof construction.
