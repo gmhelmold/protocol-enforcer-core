@@ -294,4 +294,23 @@ fn validate_hook_ref(
     if def.output_cap_bytes == 0 {
         violations.push(format!("{loc}: hook output_cap_bytes must be > 0"));
     }
+
+    // H8: `command` must not embed an absolute filesystem path. The driver
+    // runs every hook command through a shell with its current directory
+    // set to the driver's work_dir, so a relative path such as
+    // `library/hooks/scripts/foo.mjs` already resolves correctly against
+    // that work_dir (conventionally the repo root). An absolute path bakes
+    // in one contributor's machine and breaks for everyone else. Any
+    // whitespace-delimited token starting with `/` trips this rule.
+    if def
+        .command
+        .split_whitespace()
+        .any(|tok| tok.starts_with('/'))
+    {
+        violations.push(format!(
+            "{loc}: hook `command` must not contain an absolute path (found in {:?}) — \
+             use a path relative to the driver's work_dir instead",
+            def.command
+        ));
+    }
 }
