@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 use chrono::{DateTime, TimeZone, Utc};
 use protocol_types::{
     ArtifactError, ArtifactRef, ChecklistEvidence, CircuitBreakerType, ContractError, FsmError,

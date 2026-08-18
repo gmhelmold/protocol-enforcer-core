@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Acceptance tests for the gateway's env-configurable paths.
 //!
 //! Two behaviors are covered:

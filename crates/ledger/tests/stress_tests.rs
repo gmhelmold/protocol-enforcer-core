@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Concurrency + durability stress tests for `Ledger`.
 //!
 //! `Ledger::append` is `&self` (the file is behind `Arc<Mutex<File>>`), so a

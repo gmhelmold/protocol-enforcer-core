@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Per-rule tests for the strict nested-profile validator.
 //!
 //! Each rule gets a passing case plus at least one failing fixture.

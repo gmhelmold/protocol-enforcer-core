@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Unit tests for `protocol_manifest::validate_hooks` (SPEC_plugins.md
 //! WP-4, rules H1-H6). Hermetic: id-resolution cases use a fresh
 //! `tempfile::TempDir` hook library; everything else uses inline defs.

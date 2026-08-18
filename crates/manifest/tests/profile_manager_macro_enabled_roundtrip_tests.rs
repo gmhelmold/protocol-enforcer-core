@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! SPEC_config_layer.md "Macro-level `enabled` — normalize at load", CRITICAL
 //! round-trip invariant: normalization (`Profile::with_enabled_macros_only`)
 //! is transient/in-memory ONLY. `ProfileManager::save_profile` (and any load

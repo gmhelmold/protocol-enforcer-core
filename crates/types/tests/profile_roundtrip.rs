@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Round-trip test: every checked-in profile YAML must deserialize into
 //! `protocol_types::Profile` with a non-empty pipeline.
 

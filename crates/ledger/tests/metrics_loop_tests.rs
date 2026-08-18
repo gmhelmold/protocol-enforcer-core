@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! SPEC_loopback.md metrics acceptance tests (#6 `metrics_looped`, #10
 //! `loop_then_fail_metrics_passed_false`), split out of `metrics_tests.rs`
 //! to keep that file under the 600-line cap (`scripts/check_loc.sh`).

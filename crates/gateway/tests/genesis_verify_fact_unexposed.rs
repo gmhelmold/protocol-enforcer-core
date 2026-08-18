@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! A profile can wire a checklist criterion to a verify hook — a driver-side
 //! shell command that checks a fact and produces evidence for that criterion.
 //! Hooks like that are never MCP tools: the model can only see and call the

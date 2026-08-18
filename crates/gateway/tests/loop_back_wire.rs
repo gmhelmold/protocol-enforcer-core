@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! #9 wire_loopback (SPEC_loopback.md acceptance test): the gateway's
 //! `protocol_submit_milestone` response for a macro loop-back has
 //! `advanced:false`, `looped_back:true`, `rejected_items`, PLUS the new

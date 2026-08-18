@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! SPEC_config_layer.md "Macro-level `enabled` — normalize at load"
 //! validator acceptance tests: at-least-one-enabled-macro, and the CRITICAL
 //! case where disabling the true last macro promotes a `loop: true` middle

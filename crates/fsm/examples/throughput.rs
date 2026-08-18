@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Throughput harness — drives N complete in-process enforcer sessions through
 //! `ProfileFsmEngine` and reports sessions/sec and steps/sec.
 //!

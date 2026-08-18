@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! SPEC_loopback.md validator acceptance tests (Rules 9/10 -- #7
 //! `validate_loop_without_execute`, #7b `validate_loop_on_final_macro`, #13
 //! `validate_loop_execute_disabled` -- plus the profile-compat check), split

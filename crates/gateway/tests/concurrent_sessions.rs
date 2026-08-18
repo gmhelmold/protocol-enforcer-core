@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Proof: the enforcer governs N concurrent sub-agent sessions independently.
 //!
 //! The Protocol Enforcer exists to force-order *sub-agents*' work, and the

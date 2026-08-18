@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! `approver_pubkey` required iff `human_approval`, in the same per-rule
 //! style as `profile_validator_tests.rs`.
 //!

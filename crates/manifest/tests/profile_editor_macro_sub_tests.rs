@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Acceptance tests for `ProfileEditor` (SPEC_config_layer.md WP-A), part 2:
 //! macro/sub-state add-remove-move, name_collision, rename/conflict, and the
 //! protected/not-found/unsafe-name guards + remaining profile-level verbs.

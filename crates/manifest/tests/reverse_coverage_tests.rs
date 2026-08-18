@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Unit tests for `protocol_manifest::validate_hooks` rule H-RC (reverse
 //! coverage), the dual of H7 (SPEC_plugins.md WP-4). H7 proves the FORWARD
 //! inclusion: every `verify_criteria` entry is a declared checklist

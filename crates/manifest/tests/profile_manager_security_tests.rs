@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Gustavo Schneiter
+
 //! Security-focused tests for `ProfileManager`:
 //! - profile-name path traversal is rejected on every name-to-path
 //!   operation (load/save/delete/clone/create).
