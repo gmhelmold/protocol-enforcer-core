@@ -197,6 +197,11 @@ pub fn recover_profile_session(
                     s.consecutive_approval_rejections += 1;
                 }
             }
+            // Audit-only, like `ApprovalRejected`: a rejected final submit
+            // moves nothing and spends nothing, and has no counter of its
+            // own to mirror -- the submit is simply re-tryable on the same
+            // final checklist, position unchanged.
+            FsmEventType::OutputContractViolated { .. } => {}
             FsmEventType::ArtifactStored { artifact_ref } => {
                 // Rehydrate the tracked-artifact set exactly as the live engine
                 // holds it (keyed by the ref's unique on-disk path), so the

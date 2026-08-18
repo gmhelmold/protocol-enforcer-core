@@ -129,6 +129,21 @@ pub enum FsmEventType {
         sub_state_id: String,
         reason: String,
     },
+    /// A final-macro `submit_milestone` failed output-contract validation
+    /// (missing output, schema mismatch, or a `destination` that failed
+    /// confinement) and was rejected. Recorded BEFORE the error propagates
+    /// to the caller, so the ledger carries the same trace every other
+    /// rejection path (`MilestoneRejected`, `ApprovalRejected`,
+    /// `CircuitBreakerTriggered`) already gets; without it a replay of the
+    /// transcript has no evidence the violation happened. Position- and
+    /// counter-neutral, like `ApprovalRejected`: it records the attempt
+    /// without moving the session or touching macro-iteration/oscillation
+    /// counters, since the submit is simply re-tryable on the same final
+    /// checklist. `reason` is the joined schema/validation error summary
+    /// from `FsmError::OutputContractViolation`'s `Display`.
+    OutputContractViolated {
+        reason: String,
+    },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
