@@ -46,7 +46,7 @@ pub enum StepOutcome {
         position: Position,
     },
     /// A checklist rejection loop-backed to the macro's first enabled
-    /// Execute sub-state (SPEC_loopback.md) instead of staying on the
+    /// Execute sub-state instead of staying on the
     /// checklist. Carries BOTH why it rejected (`rejected_items`) AND the
     /// new position/injection (`view`) the caller must now render.
     LoopedBack {
@@ -69,7 +69,7 @@ pub struct ProfileFsmEngine<L: LedgerPort> {
 }
 
 impl<L: LedgerPort> ProfileFsmEngine<L> {
-    /// SPEC_config_layer.md "Macro-level `enabled` — normalize at load":
+    /// Macro-level `enabled`, normalized at load:
     /// `profile` is normalized to its enabled-macros-only pipeline ONCE
     /// here, so every stepping/navigation index below
     /// (`pipeline.first()`/`.last()`/`[idx+1]`/`len()-1`) is already
@@ -251,7 +251,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
                 self.step_checklist(session_id, macro_idx, &pos, evidence, output)
             }
             // The one sub-state whose submission is VERIFIED, not merely
-            // observed (SPEC_human_approval.md) — see `approval.rs`.
+            // observed — see `approval.rs`.
             SubStateType::HumanApproval => {
                 self.step_approval(session_id, macro_idx, sub_idx, &pos, evidence)
             }
@@ -410,8 +410,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
     /// and, when it is a `human_approval` gate, mint a fresh challenge, LEDGER
     /// it (`ApprovalChallengeIssued`), park it on the session, and hand it to
     /// the caller inside the step payload. Ledgering before parking is what
-    /// lets recovery replay the very same nonce instead of inventing one
-    /// (SPEC_human_approval.md).
+    /// lets recovery replay the very same nonce instead of inventing one.
     ///
     /// Every path that lands a session on a sub-state goes through here
     /// (`start_session`, `advance_plain`, `advance_macro`), so a gate cannot be

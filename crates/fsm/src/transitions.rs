@@ -119,7 +119,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
             });
         }
 
-        // SPEC_loopback.md: loop-back is the AND-gate of a global kill-switch
+        // Macro loop-back is the AND-gate of a global kill-switch
         // and a per-macro opt-in, checked AFTER both circuit breakers above
         // (a rejection that trips a breaker fails the session even with loop
         // enabled -- macro_iteration/oscillation are never reset). See
@@ -187,7 +187,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         }
 
         // Landing on the next macro's first sub-state issues its challenge when
-        // that sub-state is a `human_approval` gate (SPEC_human_approval.md).
+        // that sub-state is a `human_approval` gate.
         let (_, injected) = self.enter_sub(session_id, next_macro_idx, next_sub_idx, None)?;
         let status = self
             .sessions

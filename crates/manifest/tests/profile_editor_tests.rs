@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 
-//! Acceptance tests for `ProfileEditor` (SPEC_config_layer.md WP-A, editing
-//! core only -- CLI/UX verbs are WP-A2 and out of scope here).
+//! Acceptance tests for `ProfileEditor` (editing
+//! core only -- CLI/UX verbs are out of scope here).
 //!
 //! Hermetic: every test runs against a fresh `tempfile::TempDir`, so the
 //! repo-tracked `profiles/` directory is never touched.

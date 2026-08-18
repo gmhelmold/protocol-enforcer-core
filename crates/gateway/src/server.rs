@@ -18,7 +18,7 @@
 //! the ledger. This gateway RESOLVES NOTHING itself: rendering
 //! (`RenderedInjection`) is already done by the engine/library; the
 //! gateway only drives `start_session`/`submit_milestone`/`get_state` and
-//! serializes their results into the SPEC §2 wire shapes.
+//! serializes their results into the MCP wire shapes.
 
 use std::collections::HashMap;
 use std::path::Path;
@@ -190,7 +190,7 @@ impl ProtocolServer {
     /// Return the session's [`SharedEngine`] handle: a cache hit clones the
     /// `Arc` out of the registry (releasing the map lock immediately), and a
     /// cache miss rebuilds the engine from its on-disk ledger + sidecar
-    /// (SPEC_crash_recovery.md) and installs it. Recovery is double-checked: a
+    /// and installs it. Recovery is double-checked: a
     /// concurrent caller that recovered first wins the `entry`, and this call's
     /// own rebuilt engine is dropped — so a session is represented by exactly
     /// one `Arc<Mutex<..>>` and same-session calls serialize on it. A session
@@ -401,7 +401,7 @@ impl ProtocolServer {
         sessions.insert(session_id.clone(), Arc::new(std::sync::Mutex::new(engine)));
         drop(sessions);
 
-        // Best-effort crash-recovery sidecar (SPEC_crash_recovery.md §1): a
+        // Best-effort crash-recovery sidecar: a
         // failure here must NOT fail `protocol_start` -- recovery is
         // hardening, not a start-time hard dependency.
         if let Err(e) = write_sidecar_atomic(&session_id, &sidecar_manifest_path, &profile_version)
@@ -425,7 +425,7 @@ impl ProtocolServer {
         Parameters(req): Parameters<ProtocolSubmitMilestoneRequest>,
     ) -> Result<Json<serde_json::Value>, ErrorData> {
         // Get the session's own-locked engine (recovering from disk on a cache
-        // miss, SPEC_crash_recovery.md). The engine STAYS in the registry; the
+        // miss). The engine STAYS in the registry; the
         // per-session lock (taken inside the blocking closure below) serializes
         // concurrent same-session submissions, so a second call can never
         // recover a stale copy while this one is mid-flight.
@@ -492,7 +492,7 @@ impl ProtocolServer {
         Parameters(req): Parameters<ProtocolGetStateRequest>,
     ) -> Result<Json<serde_json::Value>, ErrorData> {
         // Get the session's own-locked engine (recovering from disk on a cache
-        // miss, SPEC_crash_recovery.md). Snapshot the `SessionState` under the
+        // miss). Snapshot the `SessionState` under the
         // per-session lock (a clone, so the guard is released before we replay
         // the ledger tail); the engine is never removed from the registry.
         let engine = self.get_or_recover(&req.session_id).await?;
@@ -507,7 +507,7 @@ impl ProtocolServer {
         Self::get_state_response(&req.session_id, &state)
     }
 
-    /// Builds the SPEC §2 `protocol_get_state` response, replaying the
+    /// Builds the `protocol_get_state` response, replaying the
     /// ledger tail. Split out so both the cache-hit and post-recovery paths
     /// share it.
     fn get_state_response(

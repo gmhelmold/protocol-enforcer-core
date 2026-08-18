@@ -10,7 +10,7 @@
 use protocol_library::{LibKind, Library};
 use protocol_types::{Profile, StateDef, SubStateDef, SubStateType};
 
-/// Validate `profile` against every SPEC §4 rule, resolving `inject.skill`
+/// Validate `profile` against every structural rule (Rules 1-10), resolving `inject.skill`
 /// / `inject.protocol` references against `lib`.
 ///
 /// Returns `Ok(())` if the profile is valid, otherwise `Err(violations)`
@@ -30,7 +30,7 @@ pub fn validate_profile(profile: &Profile, lib: &Library) -> Result<(), Vec<Stri
         validate_macro(state, lib, &mut violations);
     }
 
-    // SPEC_config_layer.md "Macro-level `enabled` — normalize at load": at
+    // Macro-level `enabled`, normalized at load: at
     // least one macro must be enabled -- an all-disabled pipeline has no
     // effective normalized pipeline for the engine/driver to run.
     let normalized = profile.with_enabled_macros_only();
@@ -38,11 +38,12 @@ pub fn validate_profile(profile: &Profile, lib: &Library) -> Result<(), Vec<Stri
         violations.push("at least one macro must be enabled".to_string());
     }
 
-    // Rules 9 & 10 (SPEC_loopback.md): validate `loop_state` structurally,
+    // Rules 9 & 10: validate `loop_state` structurally,
     // independent of the global `auto_loop_on_checklist_failure` switch. Key
     // off the NORMALIZED pipeline (last ENABLED macro) so disabling the true
     // last macro correctly flags a now-final `loop: true` middle macro
-    // (SPEC_config_layer.md's CRITICAL case) -- structural per-macro checks
+    // (the CRITICAL case where normalization changes which macro is final)
+    // -- structural per-macro checks
     // above already ran against the FULL profile, so a disabled macro must
     // still be well-formed on its own.
     check_loop_state(&normalized, &mut violations);
@@ -67,7 +68,7 @@ pub fn validate_profile(profile: &Profile, lib: &Library) -> Result<(), Vec<Stri
 }
 
 /// Rule 9: a macro with `loop_state == true` must contain at least one
-/// enabled `Execute` sub-state -- the loop-back target (SPEC_loopback.md).
+/// enabled `Execute` sub-state -- the loop-back target.
 /// Rule 10 (OWNER-DECIDED): `loop_state == true` is forbidden on the FINAL
 /// macro (the last in the pipeline, whose checklist produces
 /// `output_contract`) -- the delivery step must not cycle. Uses the shared

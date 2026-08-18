@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Step-sizing metrics (SPEC_step_metrics.md). Pure, replay-only analytics
+//! Step-sizing metrics. Pure, replay-only analytics
 //! computed offline over an already-replayed `Vec<FsmEvent>`. ZERO hot-path
 //! overhead: no new events, no new writes on the serving path.
 
@@ -77,8 +77,8 @@ fn lookup_profile(
 }
 
 /// A maximal contiguous run of events sharing the same `step_id`. Ordinarily
-/// a step_id has exactly one run per session; SPEC_loopback.md's
-/// `MacroLoopedBack` makes a macro's execute sub AND its checklist each
+/// a step_id has exactly one run per session; a macro loop-back's
+/// `MacroLoopedBack` event makes a macro's execute sub AND its checklist each
 /// appear in more than one run when the macro loops (the loop-back event is
 /// anchored at the ARRIVAL position -- the execute sub -- so it naturally
 /// starts a new run there while ending the checklist's run, exactly like any
@@ -100,7 +100,7 @@ fn is_pass_event(event_type: &FsmEventType) -> bool {
 /// (optional) supplies `sub_state_type` + `criteria_count`; without it those
 /// stay `None`.
 ///
-/// Loop-back attribution (SPEC_loopback.md, real rewrite of the per-step
+/// Loop-back attribution (a real rewrite of the per-step
 /// loop, not an added match arm): `passed` and dwell are computed from the
 /// session's step_id RUNS, not a single first-occurrence index, so a
 /// revisited step (via `MacroLoopedBack`) is attributed across every visit.

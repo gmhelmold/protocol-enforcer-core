@@ -19,8 +19,8 @@ pub struct RenderedInjection {
     pub protocol_ref: Option<String>,
     pub context: Option<String>,
     pub rendered: String,
-    /// The live challenge nonce for a `human_approval` sub-state
-    /// (SPEC_human_approval.md), `None` on every other type. Rendering is pure
+    /// The live challenge nonce for a `human_approval` sub-state,
+    /// `None` on every other type. Rendering is pure
     /// and stateless, so this is filled in by the engine (which owns the
     /// session and the ledger) right after the render, not here.
     pub approval_challenge: Option<String>,
@@ -51,7 +51,7 @@ pub(crate) fn missing_criteria(criteria: &[String], evidence: &ChecklistEvidence
 }
 
 /// First `enabled` sub-state's index. The Checklist sub can never be
-/// disabled (SPEC §4 validation), so a valid profile always has one.
+/// disabled (enforced by `validate_profile`), so a valid profile always has one.
 pub(crate) fn first_enabled_index(macro_def: &StateDef) -> Result<usize, FsmError> {
     macro_def
         .sub_states
@@ -65,7 +65,7 @@ pub(crate) fn first_enabled_index(macro_def: &StateDef) -> Result<usize, FsmErro
         })
 }
 
-/// First enabled sub-state's index of type `Execute` (SPEC_loopback.md: the
+/// First enabled sub-state's index of type `Execute` (the
 /// macro loop-back target). Thin wrapper over the shared
 /// `StateDef::first_enabled_execute_index` (which also backs the
 /// validator's Rule 9/10, see `protocol_types::StateDef` for why the
@@ -74,7 +74,7 @@ pub(crate) fn first_enabled_execute_index(macro_def: &StateDef) -> Option<usize>
     macro_def.first_enabled_execute_index()
 }
 
-/// Resolve + render a macro's loop-back target (SPEC_loopback.md): the
+/// Resolve + render a macro's loop-back target: the
 /// macro's first enabled Execute sub-state. Returns the new `Position` and
 /// its rendered injection. Callers (the engine) are expected to only invoke
 /// this for a macro that validation already guaranteed has such a sub-state;
@@ -114,9 +114,9 @@ pub(crate) fn next_enabled_index(macro_def: &StateDef, from_idx: usize) -> usize
 }
 
 /// Merge `initial_context` (start_session only) into a sub-state's base
-/// `inject.context`, string-appending its pretty-printed JSON. Resolves a
-/// SPEC §3 ambiguity: the spec says "merge into that sub's rendered
-/// context" without prescribing a shape; append is deterministic and lossless.
+/// `inject.context`, string-appending its pretty-printed JSON. The contract
+/// is "merge into that sub's rendered context" without prescribing a shape;
+/// append is deterministic and lossless.
 fn merge_initial_context(
     base: Option<String>,
     initial: Option<&serde_json::Value>,

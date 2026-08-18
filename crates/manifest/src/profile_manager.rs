@@ -254,7 +254,7 @@ impl ProfileManager {
                 ));
             }
 
-            // SPEC_loopback.md Rules 9/10, surfaced as authoring warnings
+            // Loop-back Rules 9/10, surfaced as authoring warnings
             // here (the strict, hard-fail versions live in
             // `protocol_manifest::validate_profile`, run at `protocol_start`).
             if state.loop_state {

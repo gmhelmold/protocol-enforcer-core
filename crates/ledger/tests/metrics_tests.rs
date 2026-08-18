@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 
-//! Tests for `protocol_ledger::metrics` (SPEC_step_metrics.md).
+//! Tests for `protocol_ledger::metrics`.
 //! Deterministic: explicit `DateTime` timestamps only, never `Utc::now()`.
 
 use chrono::DateTime;

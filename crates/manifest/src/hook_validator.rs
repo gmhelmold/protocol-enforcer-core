@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! `validate_hooks` (SPEC_plugins.md WP-4, "Where hook validation lives").
+//! `validate_hooks` — where hook validation lives, and why it is kept
+//! separate from the served-path validator.
 //!
-//! CRITICAL PASSIVITY CONSTRAINT (spec finding C1): this module is NEVER
+//! CRITICAL PASSIVITY CONSTRAINT (rule C1): this module is NEVER
 //! called from the strict served-path validator `profile_validator::
 //! validate_profile` (in turn called by the enforcer's
 //! `ProfileFsmEngine::start_session`). A profile with `hooks` and the same
@@ -16,8 +17,8 @@ use protocol_types::hooks::{HookDef, HookEvent, HookEventClass, HookKind, HookRe
 use protocol_types::{Profile, SubStateType};
 
 /// Validate every `HookRef` attached to every macro (`StateDef.hooks`) and
-/// sub-state (`SubStateDef.hooks`) in `profile` against rules H1-H6
-/// (SPEC_plugins.md "Where hook validation lives"). Collects ALL violations
+/// sub-state (`SubStateDef.hooks`) in `profile` against rules H1-H6.
+/// Collects ALL violations
 /// rather than stopping at the first.
 pub fn validate_hooks(profile: &Profile, lib: &Library) -> Result<(), Vec<String>> {
     let mut violations = Vec::new();

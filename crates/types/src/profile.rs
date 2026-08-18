@@ -34,7 +34,7 @@ pub struct ProfileSettings {
     /// circuit breaker. Read by `ProfileFsmEngine::reject_checklist`.
     #[serde(default = "default_oscillation")]
     pub oscillation_detection_threshold: u32,
-    /// Master switch for macro loop-back (SPEC_loopback.md); AND-gated with a
+    /// Master switch for macro loop-back; AND-gated with a
     /// macro's `loop_state`. Read by `ProfileFsmEngine::reject_checklist`.
     #[serde(default = "default_auto_loop")]
     pub auto_loop_on_checklist_failure: bool,
@@ -139,7 +139,7 @@ impl StateDef {
     }
 
     /// The index of this macro's first `enabled` sub-state of type
-    /// `Execute` (SPEC_loopback.md: the loop-back target). Lives here, on
+    /// `Execute` (the loop-back target). Lives here, on
     /// the shared `StateDef` type, rather than duplicated in
     /// `protocol-fsm`/`protocol-manifest`, so the engine's loop-back
     /// target and the validator's Rule 9/10 checks can never drift: `fsm`
@@ -170,8 +170,8 @@ pub struct SubStateDef {
     pub inject: Option<Injection>,
     #[serde(default)]
     pub verify: Option<Vec<VerifyCheck>>,
-    /// Hex-encoded Ed25519 **public** key of the human approver
-    /// (SPEC_human_approval.md). REQUIRED on a `human_approval` sub-state and
+    /// Hex-encoded Ed25519 **public** key of the human approver.
+    /// REQUIRED on a `human_approval` sub-state and
     /// forbidden on every other type — `validate_profile` hard-fails
     /// both directions, so a gate can never silently degrade into an
     /// unverifiable one (a missing key would otherwise leave nothing to check
@@ -220,7 +220,7 @@ pub enum SubStateType {
     /// A gate an AI agent cannot satisfy on its own: advancing past it requires
     /// an Ed25519 signature, produced by a human holding the profile's
     /// `approver_pubkey`, over a challenge the engine issued on entry
-    /// (SPEC_human_approval.md). Unlike `checklist`, presence is NOT enough —
+    /// Unlike `checklist`, presence is NOT enough —
     /// this is the one sub-state type whose evidence the enforcer verifies
     /// cryptographically rather than merely observes.
     HumanApproval,
@@ -297,7 +297,7 @@ impl Profile {
         cloned
     }
 
-    /// SPEC_config_layer.md "Macro-level `enabled` — normalize at load": a
+    /// Macro-level `enabled`, normalized at load: a
     /// clone whose `pipeline` keeps only `enabled` macros, everything else
     /// identical. Pure (does not mutate `self`) and transient/in-memory
     /// only — callers that persist a `Profile` (e.g.

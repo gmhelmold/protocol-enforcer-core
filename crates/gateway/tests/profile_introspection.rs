@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 
-//! Acceptance tests for read-only profile introspection over MCP
-//! (SPEC_mcp_introspection.md).
+//! Acceptance tests for read-only profile introspection over MCP.
 //!
 //! `protocol_profile_list`/`protocol_profile_show` resolve their profiles
 //! dir from `PROTOCOL_PROFILES_DIR` (see `protocol_gateway::introspect`).

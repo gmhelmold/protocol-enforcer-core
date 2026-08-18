@@ -127,7 +127,7 @@ impl Library {
 
     /// List every resolvable name under `kind`'s sub-directory (file stems
     /// of the `.md` entries), sorted. Used by the CLI's "did you mean?"
-    /// suggestions (SPEC_config_layer.md zero-friction UX) — a read-only
+    /// suggestions (zero-friction UX) — a read-only
     /// enumeration, never on the served/validation path. An unreadable or
     /// missing directory yields an empty list rather than an error.
     pub fn list_names(&self, kind: LibKind) -> Vec<String> {

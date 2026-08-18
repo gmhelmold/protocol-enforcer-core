@@ -142,7 +142,7 @@ pub fn recover_profile_session(
                 }
             }
             FsmEventType::MacroLoopedBack { to_sub, .. } => {
-                // SPEC_loopback.md: reposition to the loop target (macro
+                // Reposition to the loop target (macro
                 // unchanged) exactly as the live engine does in
                 // `apply_loop_back`. Do NOT reset macro_iteration /
                 // consecutive_identical_rejections / last_rejected_evidence_
@@ -158,7 +158,7 @@ pub fn recover_profile_session(
                     s.pending_approval = None;
                 }
             }
-            // SPEC_human_approval.md: the challenge is REPLAYED, never
+            // Human-approval recovery: the challenge is REPLAYED, never
             // regenerated. Recomputing it would mint a nonce the ledger never
             // witnessed and silently invalidate a signature a human may already
             // have produced against the original -- turning a crash into a
@@ -219,7 +219,7 @@ pub fn recover_profile_session(
     state.ok_or_else(|| FsmError::SessionNotFound(session_id.to_string()))
 }
 
-/// Gateway-facing recovery entry point (SPEC_crash_recovery.md §2): rebuild
+/// Gateway-facing recovery entry point: rebuild
 /// `session_id`'s `SessionState` by folding `self.ledger`'s events against
 /// `self.profile` (already loaded + normalized by `ProfileFsmEngine::new`),
 /// insert it into `self.sessions`, and return a reference. Used by the

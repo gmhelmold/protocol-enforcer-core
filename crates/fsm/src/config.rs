@@ -18,7 +18,7 @@ pub struct FsmConfig {
     /// SHA-256 (lowercase hex) of the profile file bytes as loaded. The engine
     /// holds a parsed `Profile`, not the bytes, so the GATEWAY computes this and
     /// passes it through here; the engine only copies it into `SessionStarted`
-    /// (SPEC_transcript_notary.md §5). `None` when the caller did not supply it.
+    /// `None` when the caller did not supply it.
     pub profile_sha256: Option<String>,
     /// Base directory the output-contract write is confined under
     /// (`validate_and_write_output`). A resolved destination that escapes this

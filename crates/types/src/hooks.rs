@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Lifecycle hook types (SPEC_plugins.md, WP-1) — additive only.
+//! Lifecycle hook types — additive only.
 //!
 //! These types describe executable extensions ("hooks") that can be
 //! attached to profile states/sub-states. This module is purely data
 //! shapes: no validation, no driver wiring. The strict
 //! `manifest::validate_profile` and the fsm ignore `hooks` entirely
-//! (passivity invariant, C1); wiring lands in later WPs.
+//! (passivity invariant, C1); wiring lands in a later change.
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -24,8 +24,8 @@ pub enum HookEvent {
     OnLoopBack,
 }
 
-/// The fail-policy class a `HookEvent` belongs to (SPEC_plugins.md, "Fail
-/// policy (C3)"): the axis is the event class, not the hook kind.
+/// The fail-policy class a `HookEvent` belongs to (rule C3, "fail
+/// policy"): the axis is the event class, not the hook kind.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "kebab-case")]
 pub enum HookEventClass {

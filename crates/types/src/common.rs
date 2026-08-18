@@ -63,7 +63,7 @@ pub struct SessionState {
     #[serde(default)]
     pub artifacts: HashMap<String, ArtifactRef>,
     /// The live challenge for the `human_approval` sub-state this session is
-    /// parked on, or `None` anywhere else (SPEC_human_approval.md). Set when
+    /// parked on, or `None` anywhere else. Set when
     /// the engine ENTERS such a sub-state and cleared when it leaves; on
     /// recovery it is replayed from the `ApprovalChallengeIssued` ledger event,
     /// never regenerated — a fresh nonce after a crash would invalidate a
@@ -72,8 +72,8 @@ pub struct SessionState {
     pub pending_approval: Option<ApprovalChallenge>,
 }
 
-/// A challenge nonce bound to one entry into one `human_approval` sub-state
-/// (SPEC_human_approval.md). `challenge` is 32 random bytes in lowercase hex;
+/// A challenge nonce bound to one entry into one `human_approval` sub-state.
+/// `challenge` is 32 random bytes in lowercase hex;
 /// the position fields pin the signature to this exact gate, so a signature
 /// harvested for one gate cannot be replayed at another.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
