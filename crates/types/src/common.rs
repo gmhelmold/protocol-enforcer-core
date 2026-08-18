@@ -31,9 +31,9 @@ pub struct OutputContract {
     pub destination: String,
 }
 
-/// Runtime session state for the nested (macro/sub-state) model
-/// (SPEC_v3 §1.1 end-state). The flat engine's `current_step`/`iteration`/
-/// `context` fields were retired in WP6 along with the flat served path.
+/// Runtime session state for the nested (macro/sub-state) model. An earlier
+/// flat engine's `current_step`/`iteration`/`context` fields were retired
+/// along with the flat served path; this is the sole session-state shape now.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionState {
     pub session_id: String,
@@ -83,8 +83,7 @@ pub struct ApprovalChallenge {
     pub challenge: String,
 }
 
-/// A position within the canonical macro-state/sub-state pipeline
-/// (SPEC_v3 §1.1).
+/// A position within the canonical macro-state/sub-state pipeline.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Position {
     pub macro_id: String,

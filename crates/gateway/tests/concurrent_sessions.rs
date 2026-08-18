@@ -6,7 +6,8 @@
 //! distinct `session_id`s) run against ONE `ProtocolServer` at the same time,
 //! their steps interleaved. Each is forced through its own state chain, and
 //! advancing one never moves another — session isolation is the property a
-//! multi-sub-agent orchestrator relies on. Deterministic, in-process, no LLM.
+//! driving client managing multiple sub-agents relies on. Deterministic,
+//! in-process, no LLM.
 
 use rmcp::handler::server::wrapper::Parameters;
 

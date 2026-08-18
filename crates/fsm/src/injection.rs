@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! Injection rendering + checklist presence-rule helpers for
-//! `ProfileFsmEngine` (SPEC_v3.md §2, §3, WP3). Split out of
-//! `profile_engine.rs` to keep both files under the 600 LOC cap; these are
-//! pure, stateless helpers with no `&mut self`.
+//! `ProfileFsmEngine`. Split out of `profile_engine.rs` to keep both files
+//! under the 600 LOC cap; these are pure, stateless helpers with no
+//! `&mut self`.
 
 use protocol_library::{LibKind, Library};
 use protocol_types::{ChecklistEvidence, FsmError, Position, StateDef, SubStateDef};
 
-/// A rendered injection for the sub-state the caller is now at (SPEC_v3
-/// §2/§9). `skill_ref`/`protocol_ref` carry the *name* referenced by the
+/// A rendered injection for the sub-state the caller is now at.
+/// `skill_ref`/`protocol_ref` carry the *name* referenced by the
 /// sub-state's `inject` (for traceability); `rendered` is the resolved,
 /// concatenated content in fixed order prompt → skill → protocol → context.
 #[derive(Debug, Clone, PartialEq)]
@@ -29,7 +29,7 @@ pub struct RenderedInjection {
     pub approval_prompt: Option<String>,
 }
 
-/// The presence rule (SPEC_v3 §3): present AND not `null`, `""`
+/// The presence rule: present AND not `null`, `""`
 /// (whitespace-only counts as empty), `[]`, or `{}`.
 pub(crate) fn is_present(value: &serde_json::Value) -> bool {
     match value {
@@ -41,8 +41,7 @@ pub(crate) fn is_present(value: &serde_json::Value) -> bool {
     }
 }
 
-/// Every `criteria` entry not present-per-`is_present` in `evidence`
-/// (SPEC_v3 §3).
+/// Every `criteria` entry not present-per-`is_present` in `evidence`.
 pub(crate) fn missing_criteria(criteria: &[String], evidence: &ChecklistEvidence) -> Vec<String> {
     criteria
         .iter()
@@ -133,7 +132,7 @@ fn merge_initial_context(
     }
 }
 
-/// Render a sub-state's injection (SPEC_v3 §2): resolve `inject.skill` /
+/// Render a sub-state's injection: resolve `inject.skill` /
 /// `inject.protocol` against the library, fall back to the macro's
 /// `system_prompt` when the sub has no `inject`, and concatenate in fixed
 /// order prompt → skill → protocol → context.

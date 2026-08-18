@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Strict nested-profile validator (SPEC_v3 §4, WP1).
+//! Strict nested-profile validator.
 //!
 //! `validate_profile` enforces the hard-fail rules the enforcer applies to
-//! the served path (`protocol_start`). It is intentionally stricter than
-//! `agent::ProfileManager::validate_profile` (warn-only, used by the CLI
-//! editor for authoring UX) — both operate over the same promoted types.
+//! the served path (`protocol_start`). It is intentionally stricter than a
+//! warn-only editor-side validator used elsewhere for authoring UX — both
+//! operate over the same promoted types.
 
 use protocol_library::{LibKind, Library};
 use protocol_types::{Profile, StateDef, SubStateDef, SubStateType};
@@ -158,9 +158,8 @@ fn validate_macro(state: &StateDef, lib: &Library, violations: &mut Vec<String>)
     }
 }
 
-/// Rule 11 (SPEC_human_approval.md): a `human_approval` sub-state MUST carry a
-/// well-formed hex Ed25519 `approver_pubkey`, and no other sub-state type may
-/// carry one.
+/// A `human_approval` sub-state MUST carry a well-formed hex Ed25519
+/// `approver_pubkey`, and no other sub-state type may carry one.
 ///
 /// Both directions hard-fail, and for the same reason: the key is the ONLY
 /// thing standing between "a human approved" and "the agent said so". Missing

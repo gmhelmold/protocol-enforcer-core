@@ -1,7 +1,7 @@
 //! Throughput harness — drives N complete in-process enforcer sessions through
 //! `ProfileFsmEngine` and reports sessions/sec and steps/sec.
 //!
-//! No LLM, no orchestrator, no MCP: this is the pure engine hot path. One
+//! No LLM, no driving client, no MCP: this is the pure engine hot path. One
 //! engine instance serves all N sessions (as a live gateway would), each
 //! session gets a unique id and is driven to `StepOutcome::Completed` with
 //! scripted, always-present checklist evidence. The per-session cost measured

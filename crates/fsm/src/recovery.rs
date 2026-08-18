@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
 //! FSM recovery module - replays the ledger to reconstruct SessionState exactly
-//! as the live `ProfileFsmEngine` would hold it in memory (SPEC_v3 §3/§6).
+//! as the live `ProfileFsmEngine` would hold it in memory.
 
 use crate::state::{SessionState, SessionStatus};
 use protocol_types::{FsmError, FsmEventType};
 
 /// Replay all events for `session_id` and fold them into a `SessionState`
-/// for the nested `ProfileFsmEngine` model (SPEC_v3 §3/§6), reconstructing
+/// for the nested `ProfileFsmEngine` model, reconstructing
 /// `position`/`status`/`macro_iteration` exactly as the live engine would
 /// hold them. Macro transitions (`MacroAdvanced`) only carry
 /// `from_macro`/`to_macro` — the new macro's first-enabled sub must be

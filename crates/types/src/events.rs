@@ -46,14 +46,14 @@ pub enum FsmEventType {
         from_step: String,
         to_step: String,
     },
-    /// Sub-state transition within a macro-state (SPEC_v3 §1.1). Emitted by
+    /// Sub-state transition within a macro-state. Emitted by
     /// `ProfileFsmEngine` on a plain (non-checklist) sub-state advance.
     SubStateAdvanced {
         from_sub: String,
         to_sub: String,
     },
-    /// Macro-state transition in the canonical pipeline (SPEC_v3 §1.1).
-    /// Emitted by `ProfileFsmEngine` when a macro's checklist passes and the
+    /// Macro-state transition in the canonical pipeline. Emitted by
+    /// `ProfileFsmEngine` when a macro's checklist passes and the
     /// pipeline advances to the next macro.
     MacroAdvanced {
         from_macro: String,
@@ -89,8 +89,8 @@ pub enum FsmEventType {
         to_sub: String,
         iteration: u32,
     },
-    /// An artifact was offloaded through the enforcer's own `ArtifactStore`
-    /// (SPEC_v3 §9, FR-25). The `sha256` in the ref is ENFORCER-authored (the
+    /// An artifact was offloaded through the enforcer's own `ArtifactStore`.
+    /// The `sha256` in the ref is ENFORCER-authored (the
     /// store hashes the bytes it received), so replaying this event rehydrates
     /// `SessionState.artifacts` exactly, and the completion-time integrity
     /// check re-verifies the ref against the still-on-disk blob.

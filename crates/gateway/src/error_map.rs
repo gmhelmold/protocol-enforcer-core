@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Error mapping: `FsmError`/`GatewayError` -> typed MCP `ErrorData` (SPEC_v3 §7).
+//! Error mapping: `FsmError`/`GatewayError` -> typed MCP `ErrorData`.
 //!
-//! Every mapped error carries a `data.code` string matching the SPEC §7
+//! Every mapped error carries a `data.code` string matching a fixed
 //! error list (`MANIFEST_INVALID`, `SESSION_NOT_FOUND`, `SESSION_INACTIVE`,
 //! `STEP_MISMATCH`, `CHECKLIST_INCOMPLETE`, `CIRCUIT_BREAKER`,
 //! `OUTPUT_CONTRACT_VIOLATION`, `LEDGER_CORRUPT`, `LIBRARY_UNRESOLVED`,

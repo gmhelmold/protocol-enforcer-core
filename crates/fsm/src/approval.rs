@@ -99,7 +99,7 @@ pub(crate) fn check(
         };
     };
 
-    // `validate_profile` Rule 11 guarantees this key exists and parses, so a
+    // `validate_profile` guarantees this key exists and parses, so a
     // profile that reached the engine cannot land here — but a gate must never
     // pass on an absent key, so the fallback is a rejection, not an unwrap.
     let Some(pubkey) = sub.approver_pubkey.as_deref() else {

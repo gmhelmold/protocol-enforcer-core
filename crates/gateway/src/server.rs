@@ -2,14 +2,14 @@
 // Copyright 2026 Gustavo Schneiter
 //! Tier-1 MCP server surface for the Protocol Enforcer.
 //!
-//! Exposes the driving tools (SPEC_v3.md §2) — `protocol_start`,
+//! Exposes the driving tools — `protocol_start`,
 //! `protocol_submit_milestone`, `protocol_get_state`, and `protocol_store_artifact`
-//! (the enforcer-authored artifact offload + integrity gate, SPEC_v3 §9/FR-25) —
+//! (the enforcer-authored artifact offload + integrity gate) —
 //! plus the two read-only introspection tools
 //! (`protocol_profile_list`/`protocol_profile_show`, see `introspect.rs`), for 6 total.
 //!
 //! Drives `protocol_fsm::ProfileFsmEngine` (the nested macro/sub-state
-//! model, SPEC_v3 §3/§9). Session state is kept correct across concurrent
+//! model). Session state is kept correct across concurrent
 //! sessions by holding a registry of one `ProfileFsmEngine` per
 //! `session_id`, EACH behind its own [`std::sync::Mutex`] so concurrent calls
 //! that name the SAME session serialize while different sessions run in
@@ -176,9 +176,9 @@ impl ProtocolServer {
     /// The exact set of model-facing MCP tool NAMES this server exposes — the
     /// registry the model can `list`/`invoke`. Read straight off the same
     /// `tool_router` the MCP `list_tools` capability serves, so it is the model's
-    /// real tool surface, not a hand-kept copy. Used to assert the sound-genesis
-    /// oracle (`verify-fact` / the verify hook) is NEVER a callable tool (AC-38):
-    /// it runs only driver-side, off the model's reach.
+    /// real tool surface, not a hand-kept copy. Used to assert that a verify
+    /// hook (`verify-fact` or similar) is NEVER a callable tool: it runs only
+    /// driver-side, off the model's reach.
     pub fn model_facing_tool_names(&self) -> Vec<String> {
         self.tool_router
             .list_all()

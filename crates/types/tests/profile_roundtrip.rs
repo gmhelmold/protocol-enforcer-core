@@ -1,6 +1,5 @@
-//! WP0 round-trip test: every checked-in profile YAML must deserialize into
-//! the promoted `protocol_types::Profile` (SPEC_v3 §1/§1.1) with a
-//! non-empty pipeline.
+//! Round-trip test: every checked-in profile YAML must deserialize into
+//! `protocol_types::Profile` with a non-empty pipeline.
 
 use protocol_types::Profile;
 use std::path::PathBuf;

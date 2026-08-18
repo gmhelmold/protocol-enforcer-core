@@ -1,8 +1,7 @@
-//! Rule 11 — `approver_pubkey` required iff `human_approval`
-//! (SPEC_human_approval.md), in the same per-rule style as
-//! `profile_validator_tests.rs`.
+//! `approver_pubkey` required iff `human_approval`, in the same per-rule
+//! style as `profile_validator_tests.rs`.
 //!
-//! The rule is the authoring-time half of the gate: a `human_approval`
+//! This is the authoring-time half of the gate: a `human_approval`
 //! sub-state whose key is absent or unparseable has NOTHING to verify a
 //! signature against, so the profile must be refused rather than loaded into a
 //! gate that cannot gate. The reverse direction matters just as much — a key on

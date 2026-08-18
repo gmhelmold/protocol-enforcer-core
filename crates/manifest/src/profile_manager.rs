@@ -2,8 +2,8 @@
 // Copyright 2026 Gustavo Schneiter
 //! Profile system - data-driven state machine configuration
 //!
-//! WP0: the data shapes (`Profile`, `ProfileSettings`, `StateDef`,
-//! `SubStateDef`, `SubStateType`, `Injection`) now live in
+//! The data shapes (`Profile`, `ProfileSettings`, `StateDef`,
+//! `SubStateDef`, `SubStateType`, `Injection`) live in
 //! `protocol_types::profile` as the shared type foundation. This module
 //! re-exports them and keeps the filesystem CRUD (`ProfileManager`).
 

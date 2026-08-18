@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! `ProfileFsmEngine` — the nested (Tier 1 macro / Tier 2 sub-state) engine
-//! (SPEC_v3.md §3, §9, WP3). Drives a single `Profile` for any number of
-//! concurrent sessions, rendering `RenderedInjection`s via `protocol-library`
-//! and enforcing presence-only checklists, circuit breakers, and the
-//! optional output contract.
+//! `ProfileFsmEngine` — the nested (Tier 1 macro / Tier 2 sub-state) engine.
+//! Drives a single `Profile` for any number of concurrent sessions, rendering
+//! `RenderedInjection`s via `protocol-library` and enforcing presence-only
+//! checklists, circuit breakers, and the optional output contract.
 //!
-//! WP4 severed the flat `FsmEngine`'s agent coupling (`execute_step_with_agent`
-//! removed, `protocol-agent` dropped from this crate's deps). WP6 retired
-//! the flat `FsmEngine`/`ManifestIR` served path itself — this is now the
-//! sole engine over the served path.
+//! An earlier flat `FsmEngine`/`ManifestIR` served path — with its own
+//! agent-coupled stepping (`execute_step_with_agent`) — has since been
+//! removed; this is now the sole engine over the served path.
 
 use crate::config::FsmConfig;
 pub use crate::injection::RenderedInjection;
@@ -28,7 +26,7 @@ use std::collections::HashMap;
 use uuid::Uuid;
 
 /// A single stepping result: where the session now is, what to inject, and
-/// its status (SPEC_v3 §9).
+/// its status.
 #[derive(Debug, Clone, PartialEq)]
 pub struct StepView {
     pub position: Position,
@@ -37,7 +35,7 @@ pub struct StepView {
     pub session_state: SessionStatus,
 }
 
-/// Result of `submit_milestone` (SPEC_v3 §9). Circuit breakers do NOT appear
+/// Result of `submit_milestone`. Circuit breakers do NOT appear
 /// here — they surface as `Err(FsmError::CircuitBreaker{..})`.
 #[derive(Debug, Clone, PartialEq)]
 pub enum StepOutcome {
@@ -61,7 +59,7 @@ pub enum StepOutcome {
 }
 
 /// Drives the nested forced state machine for one `Profile` across any
-/// number of concurrent sessions (SPEC_v3 §3, §9).
+/// number of concurrent sessions.
 pub struct ProfileFsmEngine<L: LedgerPort> {
     pub(crate) profile: Profile,
     pub(crate) library: Library,
@@ -86,7 +84,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         }
     }
 
-    /// SPEC_v3 §3 `start_session`: validate the profile, position at the
+    /// `start_session`: validate the profile, position at the
     /// first macro's first enabled sub, store `initial_context` (merged
     /// into the first sub's rendered context), append `SessionStarted`.
     pub fn start_session(
@@ -168,7 +166,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         })
     }
 
-    /// SPEC_v3 §3 `submit_milestone` steps 1-4.
+    /// `submit_milestone` steps 1-4.
     pub fn submit_milestone(
         &mut self,
         session_id: &str,
@@ -265,7 +263,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         self.sessions.get(session_id)
     }
 
-    /// SPEC_v3 §9 / FR-25: offload an artifact THROUGH the enforcer's own
+    /// Offload an artifact THROUGH the enforcer's own
     /// `ArtifactStore`. The store hashes the received bytes, so the returned
     /// `sha256` is ENFORCER-authored (never an agent claim) — which is what
     /// keeps the completion-time integrity check passive ("is my stored blob
@@ -322,7 +320,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         Ok(artifact_ref)
     }
 
-    /// SPEC_v3 §9: every artifact offloaded through the enforcer must still hash
+    /// Every artifact offloaded through the enforcer must still hash
     /// to its enforcer-authored `sha256` before the session may complete. This
     /// is an integrity check on our OWN stored blobs (passive) — not a judgement
     /// of any agent claim. Called by `complete_final_macro`; on failure the
@@ -347,7 +345,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
 
     // -- internals ---------------------------------------------------
 
-    /// SPEC_v3 §3 step 3: non-Checklist sub, plain ack.
+    /// Non-Checklist sub, plain ack.
     pub(crate) fn advance_plain(
         &mut self,
         session_id: &str,
@@ -459,7 +457,7 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         Ok((position, injected))
     }
 
-    /// SPEC_v3 §3 step 4: current sub is the macro's Checklist.
+    /// Current sub is the macro's Checklist.
     fn step_checklist(
         &mut self,
         session_id: &str,

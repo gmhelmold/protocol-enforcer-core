@@ -8,17 +8,24 @@ step" / "tweak that prompt".
 
 ## Always validate after editing
 
-```bash
-target/release/protocol-enforcer validate --manifest profiles/<name>.yaml
-# or from source: cargo run -q --release -p protocol-cli -- validate --manifest profiles/<name>.yaml
-```
+There is no standalone `validate` command in this workspace. Profiles are
+validated at load time by `protocol_manifest::validate_profile` (crate
+`protocol-manifest`), which the gateway runs automatically whenever it loads a
+profile — on `protocol_start` and on `protocol_profile_show`. The fastest way
+to check an edit is to start a session from it (or call `protocol_profile_show`)
+and read the response:
 
-Valid → `✅ Profile is valid` + a state/sub-state summary. Invalid → the error
-names the exact path, e.g. `pipeline[0].sub_states[1].type: unknown variant
-'bogus'` — go fix that path and re-run. Never ship a profile that doesn't validate.
+- Valid → the gateway returns the first injected step (or the profile
+  definition, for `protocol_profile_show`).
+- Invalid → the gateway returns an error naming the exact path, e.g.
+  `pipeline[0].sub_states[1].type: unknown variant 'bogus'` — go fix that path
+  and re-run.
 
-To see what the running gateway actually serves for a profile, use the MCP tool
-`protocol_profile_show(name)` (read-only).
+Never ship a profile that doesn't validate. The standalone operator CLI ships
+separately with the proprietary reference shell and is not part of this
+repository; `protocol-manifest`'s tests (`crates/manifest/tests/`) exercise
+`validate_profile` directly if you want to check a profile file without a
+running gateway.
 
 ## Shape (the whole schema)
 
@@ -80,16 +87,20 @@ paying, anything an operator must own. Two extra fields, both only valid here:
 ```
 
 - `approver_pubkey` is **required** here and **forbidden** on every other type —
-  `validate` fails both ways. Mint a key with `notary-keygen`; put the **public** key
-  in the profile and keep the seed on the approver's machine.
+  `validate_profile` rejects both violations. Mint a key with `notary-keygen`;
+  put the **public** key in the profile and keep the seed on the approver's
+  machine.
 - No `criteria` (that is checklist-only). The macro still needs its trailing
   `type: checklist` sub-state after the gate.
-- Flow: the agent relays the `approval_challenge` from its step payload → the human
-  runs `protocol-enforcer approve --session … --macro … --sub-state … --challenge …
-  --key …` → the agent submits the printed hex as evidence `approval_signature`.
+- Flow: the agent relays the `approval_challenge` from its step payload → a
+  human signs that challenge, off the agent's machine, with the private key
+  matching `approver_pubkey` (the format is documented inline in the profile's
+  `approval_prompt`) → the agent submits the printed hex as evidence
+  `approval_signature`.
 - Every re-entry (loop-back, retry) issues a NEW challenge, so old signatures die.
-- **If the agent can read the key file, this gate is presence-only.** Custody is the
-  whole security property — see `docs/SPEC_human_approval.md`.
+- **If the agent can read the key file, this gate is presence-only.** Custody —
+  keeping the private key off any machine the agent can reach — is the whole
+  security property this gate provides.
 
 Working example: `profiles/human-gate-demo.yaml` (ships with a published demo key).
 
@@ -113,33 +124,10 @@ Working example: `profiles/human-gate-demo.yaml` (ships with a published demo ke
   match the filename, edit, validate. (`default.yaml` is `protected` — never edit
   it in place; use it as a template.)
 
-## External-probe profiles (ship fail-closed)
-
-Some profiles wire a verify hook that shells an **external probe** — a program
-outside this repo that speaks the adapter's JSON-stdin/stdout-verdict contract.
-The `genesis-dependency*` family is the current example: their verify hooks
-(`library/hooks/scripts/genesis-verify-dependency*.mjs`) call an Atlas
-symbol-reverse oracle (`verify-fact.mjs` + a SCIP index) that is **not shipped
-here**.
-
-Rules for this category:
-
-- **They do NOT work out-of-the-box.** The external probe must be installed and
-  wired before any fact can be proven.
-- **They ship fail-closed.** The probe/scipPath args are left as **empty strings**
-  (`probe: ""`, `scipPath: ""`), never a hardcoded personal absolute path. The
-  adapter's guard (`if (!probe || !scipPath) → strip`) then fires cleanly and the
-  hook admits **zero** facts — a spawn on a dead path would instead error. An
-  empty string is the correct inert placeholder.
-- **Every such profile carries a top-of-file `EXTERNAL-PROBE PROFILE` comment**
-  stating it needs an external probe and that as shipped it admits nothing, so no
-  one mistakes it for functional.
-- To enable one: point `probe`/`scipPath` at your installed probe + index (via
-  env or a local edit you do not commit), then `validate`.
-
 ## Recipe: "human asks, model does"
 
 1. Read the target `profiles/<name>.yaml`.
 2. Make the requested edit (state / sub-state / prompt / criteria).
-3. Run `validate`; if it fails, fix at the reported path and re-run.
+3. Reload it (`protocol_start` or `protocol_profile_show`) and check the
+   response; if it's an error, fix at the reported path and re-run.
 4. The change is live for any new session the gateway starts from that profile.

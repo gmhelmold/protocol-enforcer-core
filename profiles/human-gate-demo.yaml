@@ -2,14 +2,17 @@
 # PROFILE: human-gate-demo
 #
 # The smallest profile that demonstrates a `human_approval` sub-state: do the
-# work, then stop dead until a HUMAN signs off. See docs/SPEC_human_approval.md.
+# work, then stop dead until a HUMAN signs off. See the `human_approval`
+# section of AUTHORING.md for how the gate works.
 #
 # THE KEY BELOW IS A DEMO KEY. Its secret seed is the published, worthless value
 #   0707070707070707070707070707070707070707070707070707070707070707
-# so anyone can run this profile end to end:
-#   echo 0707...07 > /tmp/demo-approver.key
-#   protocol-enforcer approve --session <id> --macro approve \
-#       --sub-state human_gate --challenge <hex> --key /tmp/demo-approver.key
+# so anyone can run this profile end to end: the approval signature is
+# produced by signing the issued challenge with that seed — either with the
+# separately-distributed operator CLI's `approve` command, or with any
+# Ed25519 implementation, since the challenge format is documented inline in
+# this profile's `approval_prompt` below — then submitting the resulting hex
+# as evidence `approval_signature`.
 #
 # For anything real: mint your own with `notary-keygen`, put the PUBLIC key
 # here, and keep the seed on the approver's machine — NOT on the agent's. If the

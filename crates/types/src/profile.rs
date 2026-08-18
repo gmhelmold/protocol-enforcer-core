@@ -2,11 +2,9 @@
 // Copyright 2026 Gustavo Schneiter
 //! Profile system - data-driven state machine configuration
 //!
-//! Promoted from `protocol-agent` (WP0, SPEC_v3 §1/§1.1) so the profile
-//! model is a shared type available to the fsm/gateway crates without a
-//! dependency on the agent crate. `ProfileManager` (CRUD over the
-//! filesystem) stays in `protocol-agent`; this module holds only the
-//! serde-facing data shapes.
+//! The profile model is a shared type available to the fsm/gateway crates.
+//! `ProfileManager` (CRUD over the filesystem) lives in `protocol-manifest`;
+//! this module holds only the serde-facing data shapes.
 
 use crate::common::OutputContract;
 use serde::{Deserialize, Serialize};
@@ -174,7 +172,7 @@ pub struct SubStateDef {
     pub verify: Option<Vec<VerifyCheck>>,
     /// Hex-encoded Ed25519 **public** key of the human approver
     /// (SPEC_human_approval.md). REQUIRED on a `human_approval` sub-state and
-    /// forbidden on every other type — `validate_profile` Rule 11 hard-fails
+    /// forbidden on every other type — `validate_profile` hard-fails
     /// both directions, so a gate can never silently degrade into an
     /// unverifiable one (a missing key would otherwise leave nothing to check
     /// the signature against).
@@ -191,9 +189,9 @@ pub struct SubStateDef {
 
 /// A client-side (trusted driver) verification check bound to a checklist
 /// criterion. The enforcer/fsm ignores this entirely (presence-only stays
-/// unchanged); it is consumed by the orchestrator driver, which runs the
-/// command and derives the criterion's evidence from the real result
-/// instead of trusting whatever the LLM claims.
+/// unchanged); it is consumed by the driving client, which runs the command
+/// and derives the criterion's evidence from the real result instead of
+/// trusting whatever the LLM claims.
 ///
 /// `criterion` must name one of the sub-state's declared `criteria`
 /// (enforced by `validate_profile`, Rule 8) — otherwise the check would be a
@@ -306,7 +304,7 @@ impl Profile {
     /// `ProfileManager::save_profile`) must NEVER call this first, or a
     /// disabled macro would be silently stripped from disk. Apply this only
     /// where a `Profile` becomes a stepping/navigation structure
-    /// (`ProfileFsmEngine::new`, the orchestrator driver's own copy), so
+    /// (`ProfileFsmEngine::new`, the driving client's own copy), so
     /// `pipeline.first()`/`.last()`/`[idx+1]`/`len()-1` are already correct
     /// with zero further logic changes.
     pub fn with_enabled_macros_only(&self) -> Profile {
@@ -385,8 +383,8 @@ mod tests {
     }
 }
 
-/// Declarative injection directive for an `inject`-type sub-state
-/// (SPEC_v3 §1.1). All fields optional; a profile author fills in
+/// Declarative injection directive for an `inject`-type sub-state.
+/// All fields optional; a profile author fills in
 /// whichever source(s) the sub-state should pull from.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Injection {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Skill/protocol library resolver (SPEC_v3 §5).
+//! Skill/protocol library resolver.
 //!
 //! Resolves reusable skill/protocol content by name from a directory tree:
 //! `<root>/skills/<name>.md`, `<root>/protocols/<name>.md`.

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Nested profile loader (SPEC_v3 §4, WP1).
+//! Nested profile loader.
 //!
 //! Loads a `protocol_types::Profile` (the nested pipeline/macro/sub-state
-//! model) from a YAML file. This is the enforcer's served-path loader —
-//! distinct from the flat `crate::loader::load_manifest` (retired in WP6).
+//! model) from a YAML file. This is the enforcer's sole served-path loader;
+//! an earlier flat loader over a different manifest shape has since been
+//! removed.
 
 use protocol_types::{ManifestError, Profile};
 use std::fs;

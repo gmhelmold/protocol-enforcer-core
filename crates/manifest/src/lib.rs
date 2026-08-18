@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Gustavo Schneiter
-//! Protocol Manifest - nested profile loader + strict validator (WP1/WP6).
+//! Protocol Manifest - nested profile loader + strict validator.
 //!
-//! The flat `load_manifest`/`validate_manifest` over `ManifestIR` were
-//! retired in WP6 (the flat served path is gone); `load_profile` +
-//! `validate_profile` are the sole loader/validator on the served path.
+//! `load_profile` + `validate_profile` are the sole loader/validator on the
+//! served path.
 
 pub mod editor;
 pub mod hook_validator;
