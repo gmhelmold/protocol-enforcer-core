@@ -17,8 +17,8 @@
 use protocol_fsm::{FsmConfig, ProfileFsmEngine, StepOutcome};
 use protocol_library::Library;
 use protocol_types::{
-    ChecklistEvidence, FsmError, FsmEventType, OutputContract, Position, Profile,
-    ProfileSettings, SessionStatus, StateDef, SubStateDef, SubStateType,
+    ChecklistEvidence, FsmError, FsmEventType, OutputContract, Position, Profile, ProfileSettings,
+    SessionStatus, StateDef, SubStateDef, SubStateType,
 };
 use std::collections::HashMap;
 use std::path::Path;
