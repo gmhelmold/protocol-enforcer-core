@@ -91,8 +91,10 @@ fn profile() -> Profile {
 fn engine_on(dir: &Path) -> ProfileFsmEngine<protocol_ledger::Ledger> {
     let library = Library::new(dir.join("library"));
     let ledger = protocol_ledger::Ledger::new(SESSION, dir).expect("ledger");
-    let mut config = FsmConfig::default();
-    config.output_base = dir.to_path_buf();
+    let config = FsmConfig {
+        output_base: dir.to_path_buf(),
+        ..Default::default()
+    };
     ProfileFsmEngine::new(profile(), library, ledger, config)
 }
 
