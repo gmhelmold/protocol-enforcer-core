@@ -140,6 +140,10 @@ impl ScratchCwd {
     fn log(&self) -> String {
         String::from_utf8_lossy(&self.buf.0.lock().unwrap()).into_owned()
     }
+
+    fn clear_log(&self) {
+        self.buf.0.lock().unwrap().clear();
+    }
 }
 
 impl Drop for ScratchCwd {
@@ -148,46 +152,50 @@ impl Drop for ScratchCwd {
     }
 }
 
+// Both the has-hooks and no-hooks cases live in ONE test on purpose. The
+// warning is emitted through a process-GLOBAL tracing subscriber (the gateway
+// warns from inside a `spawn_blocking` closure, a different thread, so a
+// thread-local subscriber would not capture it). `set_global_default` binds
+// once per process, so two separate tests would leave the second one reading a
+// buffer the subscriber never writes to — deterministically empty, and which
+// case that hits depends on test execution order. Driving both cases through
+// the single subscriber+buffer, sequentially with a clear in between, removes
+// the ordering dependency entirely.
 #[tokio::test]
-async fn warns_on_load_when_profile_has_hooks() {
+async fn warns_only_when_profile_has_hooks() {
     let scratch = ScratchCwd::enter().await;
-    let manifest_path = write_profile(scratch.path(), true);
-
     let server = ProtocolServer::new();
+
+    // Case 1: a profile that declares hooks must log the passive-gateway warning.
+    let hooked = write_profile(scratch.path(), true);
     let start = server
         .protocol_start(Parameters(ProtocolStartRequest {
-            manifest_path,
+            manifest_path: hooked,
             session_id: Some("hook-warn-session".to_string()),
             initial_context: None,
         }))
         .await
         .expect("protocol_start must succeed even with hooks (passivity: they never run)");
-    // Passivity: served position is identical to the no-hooks case below.
+    // Passivity: served position is identical to the no-hooks case.
     assert_eq!(start.0["position"]["sub_state_id"], "s1");
-
     let log = scratch.log();
     assert!(
         log.contains("hook") && (log.contains("passive") || log.contains("never")),
         "expected a passive-gateway hook warning in the log, got: {log}"
     );
-}
 
-#[tokio::test]
-async fn no_warning_when_profile_has_no_hooks() {
-    let scratch = ScratchCwd::enter().await;
-    let manifest_path = write_profile(scratch.path(), false);
-
-    let server = ProtocolServer::new();
+    // Case 2: a profile with no hooks must not warn about hooks.
+    scratch.clear_log();
+    let hookless = write_profile(scratch.path(), false);
     let start = server
         .protocol_start(Parameters(ProtocolStartRequest {
-            manifest_path,
+            manifest_path: hookless,
             session_id: Some("no-hook-session".to_string()),
             initial_context: None,
         }))
         .await
         .expect("protocol_start must succeed");
     assert_eq!(start.0["position"]["sub_state_id"], "s1");
-
     let log = scratch.log();
     assert!(
         !log.contains("hook"),
