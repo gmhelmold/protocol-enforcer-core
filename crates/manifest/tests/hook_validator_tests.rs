@@ -2,7 +2,7 @@
 // Copyright 2026 Gustavo Schneiter
 
 //! Unit tests for `protocol_manifest::validate_hooks`
-//! (rules H1-H6). Hermetic: id-resolution cases use a fresh
+//! (rules H1-H8). Hermetic: id-resolution cases use a fresh
 //! `tempfile::TempDir` hook library; everything else uses inline defs.
 
 use std::collections::BTreeMap;
@@ -448,6 +448,38 @@ fn h6_zero_timeout_is_rejected_for_resolved_library_def() {
 #[test]
 fn h6_positive_values_pass() {
     let def = valid_inline_def("v", HookKind::Mutate, vec![HookEvent::PreMacroEnter]);
+    let profile = profile_with(vec![href_inline(def)], SubStateType::Execute, vec![]);
+    assert!(validate_hooks(&profile, &empty_library()).is_ok());
+}
+
+// -- H8: `command` must not embed an absolute path --------------------------
+
+#[test]
+fn h8_absolute_path_in_command_is_rejected() {
+    let mut def = valid_inline_def("v", HookKind::Mutate, vec![HookEvent::PreMacroEnter]);
+    def.command = "node /Users/someone/repo/library/hooks/scripts/foo.mjs".to_string();
+    let profile = profile_with(vec![href_inline(def)], SubStateType::Execute, vec![]);
+    let err = validate_hooks(&profile, &empty_library()).expect_err("must reject");
+    assert!(err
+        .iter()
+        .any(|e| e.contains("must not contain an absolute path")));
+}
+
+#[test]
+fn h8_absolute_path_as_first_token_is_rejected() {
+    let mut def = valid_inline_def("v", HookKind::Mutate, vec![HookEvent::PreMacroEnter]);
+    def.command = "/usr/bin/env node script.mjs".to_string();
+    let profile = profile_with(vec![href_inline(def)], SubStateType::Execute, vec![]);
+    let err = validate_hooks(&profile, &empty_library()).expect_err("must reject");
+    assert!(err
+        .iter()
+        .any(|e| e.contains("must not contain an absolute path")));
+}
+
+#[test]
+fn h8_relative_path_command_passes() {
+    let mut def = valid_inline_def("v", HookKind::Mutate, vec![HookEvent::PreMacroEnter]);
+    def.command = "node library/hooks/scripts/foo.mjs".to_string();
     let profile = profile_with(vec![href_inline(def)], SubStateType::Execute, vec![]);
     assert!(validate_hooks(&profile, &empty_library()).is_ok());
 }
