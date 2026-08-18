@@ -1,0 +1,21 @@
+[package]
+name = "protocol-manifest"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+protocol-types = { path = "../types" }
+protocol-library = { path = "../library" }
+# The workspace's single Ed25519 + hex implementation. Used ONLY to check that a
+# `human_approval` sub-state's `approver_pubkey` is a usable key (Rule 11); a
+# second crypto crate here would be a second thing to keep correct.
+protocol-notary = { path = "../notary" }
+serde_yaml = { workspace = true }
+jsonschema = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

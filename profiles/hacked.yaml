@@ -1,0 +1,402 @@
+name: hacked
+version: 3.1.0
+description: Default SDLC pipeline - comprehensive 5-phase workflow
+protected: false
+created_at: 2026-08-09T16:52:35.685846+00:00
+cloned_from: default
+settings:
+  oscillation_detection_threshold: 3
+  auto_loop_on_checklist_failure: true
+pipeline:
+- state_id: understand
+  name: Understand & Research
+  description: Gather context, analyze codebase, retrieve memories
+  system_prompt: |
+    ## Phase 1: UNDERSTAND
+
+    You are about to start working on a task. Before writing any code, you must thoroughly understand:
+
+    1. **The Task**: What exactly needs to be built or fixed?
+    2. **The Codebase**: What exists already? What patterns are used?
+    3. **Constraints**: What are the technical, business, and time constraints?
+    4. **Dependencies**: What other systems/components does this interact with?
+
+    ### Your Approach:
+    - Search for relevant memories from past work
+    - Analyze the codebase structure and patterns
+    - Read key files to understand interfaces and contracts
+    - Build a mental model of the system
+
+    ### Rules:
+    - DO NOT write any code in this phase
+    - DO ask clarifying questions if the task is ambiguous
+    - DO identify risks and unknowns
+    - DO create a summary of your understanding
+
+    ### Output:
+    Produce a comprehensive understanding document that will guide the planning phase.
+  enabled: true
+  max_iterations: 3
+  loop: false
+  icon: 🔍
+  sub_states:
+  - id: inject
+    type: inject
+    name: Inject Context
+    description: Inject memories, codebase context, and prompt
+    enabled: true
+    criteria: null
+    inject: null
+  - id: gather
+    type: execute
+    name: Gather Information
+    description: Agent freely explores codebase and reads relevant files
+    enabled: true
+    criteria: null
+    inject: null
+  - id: synthesize
+    type: execute
+    name: Synthesize Understanding
+    description: Create mental model and identify constraints
+    enabled: true
+    criteria: null
+    inject: null
+  - id: self_review
+    type: review
+    name: Self-Review
+    description: Agent reviews its own understanding for gaps
+    enabled: true
+    criteria: null
+    inject: null
+  - id: checklist
+    type: checklist
+    name: Checklist Gate
+    description: Tier 2 validates exit criteria
+    enabled: true
+    criteria:
+    - context_gathered
+    - requirements_clear
+    - constraints_identified
+    - dependencies_mapped
+    - risks_documented
+    inject: null
+- state_id: plan
+  name: Design & Plan
+  description: Decompose task, design architecture, create execution plan
+  system_prompt: |
+    ## Phase 2: PLAN
+
+    Based on your understanding, create a detailed execution plan.
+
+    ### Your Approach:
+    1. **Decompose** the task into sub-tasks with clear dependencies
+    2. **Design** the architecture: interfaces, data flow, components
+    3. **Select** the strategy: TDD, implementation-first, or hybrid
+    4. **Create** a step-by-step execution plan with validation checkpoints
+
+    ### Rules:
+    - Each sub-task should be independently testable
+    - Define clear interfaces between components
+    - Identify the critical path (what must be done first)
+    - Plan for error handling and edge cases
+
+    ### Output:
+    A detailed execution plan with:
+    - Sub-task breakdown with dependencies
+    - Interface definitions
+    - Test strategy
+    - Risk mitigation steps
+  enabled: true
+  max_iterations: 3
+  loop: false
+  icon: 📐
+  sub_states:
+  - id: inject
+    type: inject
+    name: Inject Context
+    description: Inject understanding from previous phase
+    enabled: true
+    criteria: null
+    inject: null
+  - id: design
+    type: execute
+    name: Design Architecture
+    description: Define interfaces, data flow, components
+    enabled: true
+    criteria: null
+    inject: null
+  - id: create_plan
+    type: execute
+    name: Create Execution Plan
+    description: Step-by-step plan with validation checkpoints
+    enabled: true
+    criteria: null
+    inject: null
+  - id: self_review
+    type: review
+    name: Self-Review
+    description: Review plan for completeness and feasibility
+    enabled: true
+    criteria: null
+    inject: null
+  - id: checklist
+    type: checklist
+    name: Checklist Gate
+    description: Tier 2 validates exit criteria
+    enabled: true
+    criteria:
+    - task_decomposed
+    - interfaces_defined
+    - strategy_selected
+    - execution_plan_created
+    inject: null
+- state_id: execute
+  name: Implement (TDD Loop)
+  description: Test-driven development with iterative refinement
+  system_prompt: |
+    ## Phase 3: EXECUTE
+
+    Implement the plan using Test-Driven Development (TDD).
+
+    ### TDD Loop (repeat for each sub-task):
+    1. **Red**: Write a failing test
+    2. **Green**: Write minimal code to pass
+    3. **Refactor**: Clean up while keeping tests green
+
+    ### Rules:
+    - Write tests BEFORE implementation
+    - One test at a time - don't batch
+    - Run tests after every change
+    - If tests fail unexpectedly, debug before continuing
+    - Commit after each passing test (atomic commits)
+
+    ### Error Handling:
+    - Test failure → expected in TDD, fix code
+    - Build failure → fix and retry
+    - Timeout → simplify approach
+    - 3 identical failures → escalate, change strategy
+
+    ### Output:
+    Working, tested code that satisfies the plan.
+  enabled: true
+  max_iterations: 5
+  loop: true
+  icon: ⚡
+  sub_states:
+  - id: inject
+    type: inject
+    name: Inject Context
+    description: Inject plan and coding standards
+    enabled: true
+    criteria: null
+    inject: null
+  - id: write_tests
+    type: execute
+    name: Write Tests
+    description: 'TDD: write failing tests first'
+    enabled: true
+    criteria: null
+    inject: null
+  - id: implement
+    type: execute
+    name: Implement
+    description: Write code to pass tests
+    enabled: true
+    criteria: null
+    inject: null
+  - id: debug
+    type: execute
+    name: Debug & Fix
+    description: Fix failing tests and edge cases
+    enabled: true
+    criteria: null
+    inject: null
+  - id: self_review
+    type: review
+    name: Self-Review
+    description: Review code quality and test coverage
+    enabled: true
+    criteria: null
+    inject: null
+  - id: checklist
+    type: checklist
+    name: Checklist Gate
+    description: Tier 2 validates exit criteria
+    enabled: true
+    criteria:
+    - tests_written
+    - code_implemented
+    - tests_passing
+    - edge_cases_covered
+    inject: null
+- state_id: review
+  name: Review & Quality Gate
+  description: 'Comprehensive review: self, static analysis, security, performance'
+  system_prompt: |
+    ## Phase 4: REVIEW
+
+    Before delivering, rigorously review your work.
+
+    ### Review Checklist:
+    1. **Self-Review**: Re-read all code, check against plan
+    2. **Static Analysis**: Run linter, type checker, SAST
+    3. **Security**: Check for OWASP Top 10, injection, auth issues
+    4. **Performance**: Profile, benchmark, identify bottlenecks
+    5. **Code Quality**: Remove duplication, improve readability
+
+    ### Rules:
+    - Be critical - find your own bugs before others do
+    - Check edge cases and error paths
+    - Verify all requirements from the plan are met
+    - Ensure tests actually test the behavior (not just pass)
+
+    ### Output:
+    Reviewed, cleaned, secure code ready for delivery.
+  enabled: true
+  max_iterations: 4
+  loop: false
+  icon: 🔬
+  sub_states:
+  - id: inject
+    type: inject
+    name: Inject Context
+    description: Inject coding standards and review checklist
+    enabled: true
+    criteria: null
+    inject: null
+  - id: self_review
+    type: execute
+    name: Self-Review
+    description: Agent re-reads all code against plan
+    enabled: true
+    criteria: null
+    inject: null
+  - id: static_analysis
+    type: execute
+    name: Static Analysis
+    description: Lint, type check, SAST
+    enabled: true
+    criteria: null
+    inject: null
+  - id: security
+    type: execute
+    name: Security Scan
+    description: OWASP Top 10, injection, auth issues
+    enabled: true
+    criteria: null
+    inject: null
+  - id: performance
+    type: execute
+    name: Performance Check
+    description: Profile, benchmark, identify bottlenecks
+    enabled: true
+    criteria: null
+    inject: null
+  - id: refactor
+    type: execute
+    name: Refactor
+    description: Clean code, remove duplication
+    enabled: true
+    criteria: null
+    inject: null
+  - id: peer_review
+    type: review
+    name: Peer Review
+    description: Final review before delivery
+    enabled: true
+    criteria: null
+    inject: null
+  - id: checklist
+    type: checklist
+    name: Checklist Gate
+    description: Tier 2 validates exit criteria
+    enabled: true
+    criteria:
+    - self_review_done
+    - static_analysis_clean
+    - security_checked
+    - performance_verified
+    inject: null
+- state_id: deliver
+  name: Deliver & Handoff
+  description: Package work for integration and handoff
+  system_prompt: |
+    ## Phase 5: DELIVER
+
+    Package your work for integration and handoff.
+
+    ### Steps:
+    1. **Final Test Run**: Complete test suite, all green
+    2. **Commit**: Atomic commits with clear messages
+    3. **Pull Request**: Create PR with description, test results
+    4. **Documentation**: Update README, changelog, API docs
+    5. **Handoff**: Summary of changes, next steps, known issues
+
+    ### Rules:
+    - All tests must pass before PR
+    - PR description must explain WHAT and WHY
+    - Include test results in PR
+    - Update all relevant documentation
+    - Flag any known limitations or follow-up work
+
+    ### Output:
+    Production-ready code with PR, docs, and handoff notes.
+  enabled: true
+  max_iterations: 3
+  loop: false
+  icon: 🚀
+  sub_states:
+  - id: inject
+    type: inject
+    name: Inject Context
+    description: Inject commit conventions and PR template
+    enabled: true
+    criteria: null
+    inject: null
+  - id: final_tests
+    type: execute
+    name: Final Test Run
+    description: Complete test suite, all green
+    enabled: true
+    criteria: null
+    inject: null
+  - id: commit
+    type: execute
+    name: Commit Changes
+    description: Atomic commits with clear messages
+    enabled: true
+    criteria: null
+    inject: null
+  - id: create_pr
+    type: execute
+    name: Create PR
+    description: Pull request with description and test results
+    enabled: true
+    criteria: null
+    inject: null
+  - id: update_docs
+    type: execute
+    name: Update Documentation
+    description: README, changelog, API docs
+    enabled: true
+    criteria: null
+    inject: null
+  - id: final_review
+    type: review
+    name: Final Review
+    description: Last check before handoff
+    enabled: true
+    criteria: null
+    inject: null
+  - id: checklist
+    type: checklist
+    name: Checklist Gate
+    description: Tier 2 validates exit criteria
+    enabled: true
+    criteria:
+    - all_tests_green
+    - code_committed
+    - pr_created
+    - docs_updated
+    inject: null
+output_contract: null

@@ -1,0 +1,134 @@
+###############################################################################
+# PROFILE: quick-bug-fix
+# Clonado de: default
+# Perfil simplificado para correções rápidas - apenas 3 fases
+#
+# Como criar novo perfil:
+#   1. Copie este arquivo
+#   2. Mude o 'name'
+#   3. Adicione/remova/reordene states do pipeline
+#   4. Salve em profiles/<nome>.yaml
+###############################################################################
+
+name: "quick-bug-fix"
+version: "1.0.0"
+description: "Fast bug fix pipeline - understand, fix, verify"
+protected: false
+created_at: "2024-01-15T00:00:00Z"
+cloned_from: "default"
+
+settings:
+  oscillation_detection_threshold: 3
+  auto_loop_on_checklist_failure: true
+
+pipeline:
+
+  - state_id: understand
+    name: "Understand Bug"
+    description: "Reproduce and understand the bug"
+    enabled: true
+    max_iterations: 2
+    icon: "🐛"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject bug report and relevant code"
+        enabled: true
+
+      - id: reproduce
+        type: execute
+        name: "Reproduce Bug"
+        description: "Run code, confirm bug exists"
+        enabled: true
+
+      - id: root_cause
+        type: execute
+        name: "Find Root Cause"
+        description: "Identify the source of the bug"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - bug_reproduced
+          - root_cause_identified
+
+  - state_id: fix
+    name: "Implement Fix"
+    description: "Fix the bug with tests"
+    enabled: true
+    max_iterations: 3
+    loop: true
+    icon: "🔧"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject root cause analysis"
+        enabled: true
+
+      - id: write_test
+        type: execute
+        name: "Write Failing Test"
+        description: "Test that reproduces the bug"
+        enabled: true
+
+      - id: fix_code
+        type: execute
+        name: "Fix Code"
+        description: "Implement the fix"
+        enabled: true
+
+      - id: verify
+        type: review
+        name: "Verify Fix"
+        description: "Run test, confirm bug is fixed"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - failing_test_written
+          - fix_implemented
+          - test_passes
+
+  - state_id: verify
+    name: "Final Verification"
+    description: "Ensure no regressions"
+    enabled: true
+    max_iterations: 2
+    icon: "✅"
+
+    sub_states:
+      - id: inject
+        type: inject
+        name: "Inject Context"
+        description: "Inject full test suite info"
+        enabled: true
+
+      - id: run_all
+        type: execute
+        name: "Run All Tests"
+        description: "Full regression check"
+        enabled: true
+
+      - id: edge_cases
+        type: execute
+        name: "Check Edge Cases"
+        description: "Verify edge cases still work"
+        enabled: true
+
+      - id: checklist
+        type: checklist
+        name: "Checklist Gate"
+        enabled: true
+        criteria:
+          - all_tests_pass
+          - no_regressions

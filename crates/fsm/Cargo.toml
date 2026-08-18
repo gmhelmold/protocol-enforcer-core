@@ -1,0 +1,32 @@
+[package]
+name = "protocol-fsm"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+protocol-types = { path = "../types" }
+protocol-manifest = { path = "../manifest" }
+protocol-ledger = { path = "../ledger" }
+protocol-artifacts = { path = "../artifacts" }
+protocol-contract = { path = "../contract" }
+protocol-library = { path = "../library" }
+# The workspace's single Ed25519 + CSPRNG surface (`protocol_notary::approval`).
+# The fsm never touches `ed25519-dalek`/`getrandom` directly, so the human-approval
+# gate and the transcript-root witness can never drift onto two crypto stacks.
+protocol-notary = { path = "../notary" }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+indexmap = { workspace = true }
+sha2 = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+criterion = { version = "0.5", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "hotpath"
+harness = false

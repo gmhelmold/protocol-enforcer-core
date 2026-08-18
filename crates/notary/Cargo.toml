@@ -1,0 +1,30 @@
+[package]
+name = "protocol-notary"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[lib]
+name = "protocol_notary"
+path = "src/lib.rs"
+
+[[bin]]
+name = "notary-sign"
+path = "src/bin/notary_sign.rs"
+
+[[bin]]
+name = "notary-keygen"
+path = "src/bin/notary_keygen.rs"
+
+[dependencies]
+protocol-ledger = { path = "../ledger" }
+protocol-types = { path = "../types" }
+ed25519-dalek = { workspace = true }
+sha2 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+getrandom = { workspace = true }
+clap = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

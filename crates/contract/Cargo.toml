@@ -1,0 +1,11 @@
+[package]
+name = "protocol-contract"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+protocol-types = { path = "../types" }
+jsonschema = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

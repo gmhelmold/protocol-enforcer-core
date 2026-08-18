@@ -1,0 +1,13 @@
+[package]
+name = "protocol-library"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+thiserror = { workspace = true }
+serde_yaml = { workspace = true }
+protocol-types = { path = "../types" }
+
+[dev-dependencies]
+tempfile = { workspace = true }

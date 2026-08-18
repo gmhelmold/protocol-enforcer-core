@@ -1,0 +1,25 @@
+[package]
+name = "protocol-ledger"
+version = "0.1.1"
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+protocol-types = { path = "../types" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["fs", "macros"] }
+sha2 = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+criterion = { version = "0.5", default-features = false, features = ["cargo_bench_support"] }
+chrono = { workspace = true }
+uuid = { workspace = true }
+
+[[bench]]
+name = "hotpath"
+harness = false
