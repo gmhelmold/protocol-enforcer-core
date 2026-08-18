@@ -220,7 +220,28 @@ impl<L: LedgerPort> ProfileFsmEngine<L> {
         // computed by `validate_and_write_output` so nothing is re-read or
         // re-serialized to hash it (§8). `None` when the profile has no contract.
         let contract_written = match &contract {
-            Some(contract) => Some(self.validate_and_write_output(session_id, contract, output)?),
+            Some(contract) => match self.validate_and_write_output(session_id, contract, output) {
+                Ok(written) => Some(written),
+                Err(err) => {
+                    // Record the violation in the ledger BEFORE propagating
+                    // the error, so an auditor replaying the transcript can
+                    // see the rejection happened — the same trace every
+                    // other rejection path already leaves
+                    // (`MilestoneRejected`, `ApprovalRejected`,
+                    // `CircuitBreakerTriggered`). Position- and
+                    // counter-neutral: the session stays on the final
+                    // checklist and the submit is simply re-tryable.
+                    self.append(
+                        session_id,
+                        FsmEventType::OutputContractViolated {
+                            reason: err.to_string(),
+                        },
+                        pos,
+                        serde_json::json!({}),
+                    )?;
+                    return Err(err);
+                }
+            },
             None => None,
         };
         let contract_path = contract_written.as_ref().map(|(path, _)| path.clone());

@@ -15,11 +15,12 @@ pub struct StepMetrics {
     pub sub_state_type: Option<String>,
     pub criteria_count: Option<usize>,
     /// Total rejections at this position: `MilestoneRejected` (checklist
-    /// submissions) PLUS `ApprovalRejected` (`human_approval` gate
-    /// rejections). Both are gate friction at the same step_id — a
+    /// submissions), `ApprovalRejected` (`human_approval` gate rejections),
+    /// and `OutputContractViolated` (final-checklist output contract
+    /// failures). All are gate friction at the same step_id — a
     /// `human_approval` sub-state that gets rejected repeatedly is exactly
     /// the "this gate is too big/too strict" signal this module exists to
-    /// surface, so excluding it undercounted friction on approval gates.
+    /// surface, so excluding any of them undercounted friction.
     pub rejections: usize,
     pub passed: bool,
     pub retry_count: usize,
@@ -199,6 +200,15 @@ pub fn compute_session_metrics(events: &[FsmEvent], profile: Option<&Profile>) -
                 FsmEventType::ApprovalRejected { .. } => {
                     rejections += 1;
                     approval_rejections += 1;
+                }
+                // Counts as gate friction at the final checklist's step_id,
+                // same as MilestoneRejected/ApprovalRejected. No criteria to
+                // attribute (like ApprovalRejected) and rare enough (one
+                // shot at session completion, not a per-macro loop) that a
+                // dedicated counter would be overkill — folded into
+                // `rejections` only.
+                FsmEventType::OutputContractViolated { .. } => {
+                    rejections += 1;
                 }
                 _ => {}
             }
