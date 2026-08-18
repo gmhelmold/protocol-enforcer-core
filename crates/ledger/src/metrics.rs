@@ -14,10 +14,24 @@ pub struct StepMetrics {
     pub sub_state_id: String,
     pub sub_state_type: Option<String>,
     pub criteria_count: Option<usize>,
+    /// Total rejections at this position: `MilestoneRejected` (checklist
+    /// submissions) PLUS `ApprovalRejected` (`human_approval` gate
+    /// rejections). Both are gate friction at the same step_id — a
+    /// `human_approval` sub-state that gets rejected repeatedly is exactly
+    /// the "this gate is too big/too strict" signal this module exists to
+    /// surface, so excluding it undercounted friction on approval gates.
     pub rejections: usize,
     pub passed: bool,
     pub retry_count: usize,
+    /// Histogram from `MilestoneRejected.rejected_items` ONLY.
+    /// `ApprovalRejected` has no per-criterion breakdown (just a free-text
+    /// `reason`), so it is counted in `rejections`/`approval_rejections`
+    /// but never conflated into this per-criterion histogram.
     pub rejected_criteria: BTreeMap<String, usize>,
+    /// Count of `ApprovalRejected` events at this position — the
+    /// `human_approval`-gate subset of `rejections`, broken out separately
+    /// since it carries no criteria to attribute.
+    pub approval_rejections: usize,
     pub dwell_ms: Option<i64>,
 }
 
@@ -170,15 +184,23 @@ pub fn compute_session_metrics(events: &[FsmEvent], profile: Option<&Profile>) -
     for step_id in &order {
         let mut rejections = 0usize;
         let mut rejected_criteria: BTreeMap<String, usize> = BTreeMap::new();
+        let mut approval_rejections = 0usize;
         for event in events
             .iter()
             .filter(|e| e.step_id.as_deref() == Some(step_id.as_str()))
         {
-            if let FsmEventType::MilestoneRejected { rejected_items, .. } = &event.event_type {
-                rejections += 1;
-                for item in rejected_items {
-                    *rejected_criteria.entry(item.clone()).or_insert(0) += 1;
+            match &event.event_type {
+                FsmEventType::MilestoneRejected { rejected_items, .. } => {
+                    rejections += 1;
+                    for item in rejected_items {
+                        *rejected_criteria.entry(item.clone()).or_insert(0) += 1;
+                    }
                 }
+                FsmEventType::ApprovalRejected { .. } => {
+                    rejections += 1;
+                    approval_rejections += 1;
+                }
+                _ => {}
             }
         }
 
@@ -222,6 +244,7 @@ pub fn compute_session_metrics(events: &[FsmEvent], profile: Option<&Profile>) -
             passed,
             retry_count: rejections,
             rejected_criteria,
+            approval_rejections,
             dwell_ms,
         });
     }
