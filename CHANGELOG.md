@@ -3,6 +3,21 @@
 All notable changes to this project are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/).
 
+## 0.1.2
+
+- `protocol-ledger` metrics now count human-approval rejections: a rejected
+  `human_approval` gate contributes to a step's `rejections` and to a
+  dedicated `approval_rejections` counter, instead of being invisible.
+- Output-contract violations are now recorded in the ledger. A final-macro
+  submit that fails output-contract validation appends a typed
+  `OutputContractViolated` event before the error propagates, so the rejection
+  survives a transcript replay like every other rejection path.
+- `protocol-manifest` gains the H8 hook lint: a hook `command` containing an
+  absolute filesystem path is rejected at validation time, since hook commands
+  resolve relative to the driver's working directory.
+- `protocol-gateway` logs a warning when it loads a profile that declares
+  hooks, because the passive gateway path never executes them.
+
 ## 0.1.1
 
 - Fix: `protocol-artifacts`' path validation (`is_safe_relative_path`) now

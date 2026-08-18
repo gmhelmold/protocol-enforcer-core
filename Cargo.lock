@@ -1277,7 +1277,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-artifacts"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "mime_guess",
  "protocol-types",
@@ -1290,7 +1290,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-contract"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "jsonschema",
  "protocol-types",
@@ -1300,7 +1300,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-fsm"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "criterion",
@@ -1322,7 +1322,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-gateway"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "protocol-artifacts",
  "protocol-contract",
@@ -1345,7 +1345,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-ledger"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "criterion",
@@ -1361,7 +1361,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-library"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "protocol-types",
  "serde_yaml",
@@ -1371,7 +1371,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-manifest"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "jsonschema",
@@ -1386,7 +1386,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-notary"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "clap",
  "ed25519-dalek",
@@ -1401,7 +1401,7 @@ dependencies = [
 
 [[package]]
 name = "protocol-types"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "serde",
