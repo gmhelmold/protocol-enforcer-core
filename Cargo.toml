@@ -18,7 +18,7 @@ edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/gmhelmold/protocol-enforcer-core"
 authors = ["Gustavo Schneiter"]
-rust-version = "1.80"
+rust-version = "1.89"
 
 [workspace.dependencies]
 serde = { version = "1.0", features = ["derive"] }
