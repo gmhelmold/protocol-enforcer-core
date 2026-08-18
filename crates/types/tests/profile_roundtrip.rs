@@ -35,11 +35,11 @@ fn default_profile_round_trips() {
 }
 
 #[test]
-fn hacked_profile_round_trips() {
-    let profile = load("hacked");
+fn mutated_clone_profile_round_trips() {
+    let profile = load("mutated-clone");
     assert!(
         !profile.pipeline.is_empty(),
-        "hacked.yaml pipeline must be non-empty"
+        "mutated-clone.yaml pipeline must be non-empty"
     );
 }
 

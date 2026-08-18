@@ -180,12 +180,12 @@ pipeline:
 /// SPEC_loopback.md profile-compat check: all 5 shipped `profiles/*.yaml`
 /// must still validate clean under the new Rules 9/10 (`default.yaml`'s
 /// `loop: true` execute macro has execute subs and isn't final;
-/// `hacked.yaml`/`quick-bug-fix.yaml` mirror that same shape).
+/// `mutated-clone.yaml`/`quick-bug-fix.yaml` mirror that same shape).
 #[test]
 fn all_shipped_profiles_validate_clean_under_loop_rules() {
     let names = [
         "default.yaml",
-        "hacked.yaml",
+        "mutated-clone.yaml",
         "quick-bug-fix.yaml",
         "research.yaml",
         "tdd_feature.yaml",

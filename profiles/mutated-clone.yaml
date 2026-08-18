@@ -1,4 +1,15 @@
-name: hacked
+###############################################################################
+# PROFILE: mutated-clone
+#
+# A mutation fixture, not an authoring example: it is a clone of `default`
+# whose fields were deliberately changed (name, version, description) to
+# exercise the roundtrip/editor/validator tests against a SECOND real
+# profile that isn't `default` itself. There is nothing adversarial about
+# the pipeline's content — "mutated" refers to the clone-then-edit origin of
+# this fixture, not to its behavior.
+###############################################################################
+
+name: mutated-clone
 version: 3.1.0
 description: Default SDLC pipeline - comprehensive 5-phase workflow
 protected: false
