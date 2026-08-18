@@ -96,5 +96,5 @@ model round-trip, but not literally zero, and filesystem-dependent.
 
 ## License
 
-Apache-2.0. See [`LICENSE-APACHE`](LICENSE-APACHE) and [`NOTICE`](NOTICE). Every
-source file carries an `SPDX-License-Identifier: Apache-2.0` header.
+Apache-2.0. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). Every source file
+carries an `SPDX-License-Identifier: Apache-2.0` header.
