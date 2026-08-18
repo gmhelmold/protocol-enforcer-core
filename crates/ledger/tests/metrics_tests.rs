@@ -268,6 +268,87 @@ fn step_metrics_failed_session_status() {
     assert_eq!(metrics.status, "failed");
 }
 
+/// A `human_approval` gate's `ApprovalRejected` events must count into that
+/// position's `rejections` (and its dedicated `approval_rejections`
+/// counter) exactly like `MilestoneRejected` does for a checklist — they
+/// were previously invisible to per-gate friction.
+#[test]
+fn approval_rejected_counts_into_rejections_and_approval_rejections() {
+    let events = vec![
+        ev(
+            "sess-approval",
+            0,
+            None,
+            FsmEventType::SessionStarted {
+                pipeline_id: "pipeline-a".to_string(),
+                manifest_version: "1".to_string(),
+                profile_sha256: None,
+            },
+        ),
+        ev(
+            "sess-approval",
+            1,
+            Some("release/sign_off"),
+            FsmEventType::ApprovalRejected {
+                macro_id: "release".to_string(),
+                sub_state_id: "sign_off".to_string(),
+                reason: "bad signature".to_string(),
+            },
+        ),
+        ev(
+            "sess-approval",
+            2,
+            Some("release/sign_off"),
+            FsmEventType::ApprovalRejected {
+                macro_id: "release".to_string(),
+                sub_state_id: "sign_off".to_string(),
+                reason: "wrong approver".to_string(),
+            },
+        ),
+        // A checklist rejection at the SAME step_id must still land only in
+        // rejected_criteria/rejections, not approval_rejections.
+        ev(
+            "sess-approval",
+            3,
+            Some("release/sign_off"),
+            FsmEventType::MilestoneRejected {
+                rejected_items: vec!["checklist_item".to_string()],
+                reason: "not ready".to_string(),
+                iteration: 1,
+            },
+        ),
+        ev(
+            "sess-approval",
+            4,
+            Some("release/sign_off"),
+            FsmEventType::MilestoneAccepted { next_step_id: None },
+        ),
+        ev(
+            "sess-approval",
+            5,
+            None,
+            FsmEventType::SessionCompleted {
+                final_artifact_path: "/tmp/artifact.json".to_string(),
+                output_sha256: None,
+            },
+        ),
+    ];
+
+    let metrics = compute_session_metrics(&events, None);
+    assert_eq!(metrics.steps.len(), 1);
+    let gate = &metrics.steps[0];
+
+    // 2 ApprovalRejected + 1 MilestoneRejected = 3 total rejections.
+    assert_eq!(gate.rejections, 3);
+    assert_eq!(gate.retry_count, 3);
+    // Only the ApprovalRejected pair counted in the dedicated counter.
+    assert_eq!(gate.approval_rejections, 2);
+    // The checklist rejection's item still lands in the per-criterion histogram.
+    assert_eq!(gate.rejected_criteria.get("checklist_item"), Some(&1));
+    assert!(gate.passed);
+    assert_eq!(metrics.total_rejections, 3);
+}
+
 /// Two sessions with checklist gates of size 3 and 5 -> two buckets with
 /// correct means/first_pass_rate. `criteria_count` comes only from a
 /// profile lookup, so we synthesize `SessionMetrics` via two sessions whose
