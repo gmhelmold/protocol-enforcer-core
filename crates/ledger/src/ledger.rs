@@ -130,7 +130,7 @@ impl Ledger {
         &self.path
     }
 
-    /// Byte-exact transcript leaves for notarization (NOT-2): the
+    /// Byte-exact transcript leaves for notarization: the
     /// file's raw bytes split on `0x0A`, dropping zero-length segments. Every
     /// other byte is kept verbatim — including `\r`, including invalid UTF-8,
     /// including a torn final line left by a crash.
@@ -141,14 +141,14 @@ impl Ledger {
     /// silently change the leaf set. The transcript root must commit to the
     /// bytes actually on disk, so this reads and splits raw `Vec<u8>`.
     ///
-    /// Returns `Err` when the file is **absent** (NOT-4): a missing ledger is an
+    /// Returns `Err` when the file is **absent**: a missing ledger is an
     /// error, never an empty tree. Unlike `replay`, which returns `Ok(empty)`
     /// for a non-existent path, mirroring that here would let a typo'd session
     /// id or a wrong `PROTOCOL_LEDGER_DIR` print a well-formed root that commits
     /// to nothing. The empty root is defined only for a file that *exists* and
     /// holds no non-empty line.
     ///
-    /// Reads nothing beyond the file and mutates nothing (NOT-11).
+    /// Reads nothing beyond the file and mutates nothing.
     pub fn lines(session_id: &str, dir: &Path) -> Result<Vec<Vec<u8>>, LedgerError> {
         let path = dir.join(format!("{}.jsonl", session_id));
         let bytes = std::fs::read(&path)?;
@@ -176,7 +176,7 @@ mod lines_tests {
     use super::*;
     use protocol_types::{FsmEvent, FsmEventType};
 
-    // --- NOT-2: byte-exact leaves ------------------------------------------
+    // --- byte-exact leaves ------------------------------------------
 
     #[test]
     fn splits_on_lf_and_drops_empty_segments() {
@@ -206,7 +206,7 @@ mod lines_tests {
         assert_eq!(ls, vec![vec![0xFF, 0xFE], b"x".to_vec()]);
     }
 
-    // --- NOT-4: missing vs. existing-empty ---------------------------------
+    // --- missing vs. existing-empty ---------------------------------
 
     #[test]
     fn missing_file_is_err_not_empty() {
@@ -225,7 +225,7 @@ mod lines_tests {
         );
     }
 
-    // --- NOT-13: reads a pre-feature ledger --------------------------------
+    // --- reads a pre-feature ledger --------------------------------
 
     #[test]
     fn reads_pre_feature_ledger_lines() {
@@ -243,7 +243,7 @@ mod lines_tests {
         assert_eq!(back.session_id, ev.session_id);
     }
 
-    // --- NOT-12: append framing is exactly `to_string(event) + "\n"` --------
+    // --- append framing is exactly `to_string(event) + "\n"` --------
 
     #[test]
     fn append_writes_exactly_json_plus_newline() {

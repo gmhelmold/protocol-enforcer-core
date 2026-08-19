@@ -298,7 +298,7 @@ fn fsm_event_with_all_event_types_roundtrip() {
 
 // --- transcript notary: additive-field wire compatibility ------------------
 
-/// NOT-13: a ledger written BEFORE this feature (no `profile_sha256` /
+/// A ledger written BEFORE this feature (no `profile_sha256` /
 /// `output_sha256` keys) still deserializes, with the new fields defaulting to
 /// `None`.
 #[test]
@@ -321,7 +321,7 @@ fn pre_feature_events_deserialize_with_none() {
     }
 }
 
-/// NOT-12: a hash-less event serializes byte-identically to the pre-feature
+/// A hash-less event serializes byte-identically to the pre-feature
 /// shape — `skip_serializing_if` drops the `None` field, so an existing ledger's
 /// bytes are unchanged and the transcript root over an old session is stable.
 #[test]
