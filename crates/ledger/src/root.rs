@@ -43,7 +43,7 @@ pub fn transcript_root_bytes(session_id: &str, dir: &Path) -> Result<[u8; 32], L
 }
 
 /// The `profile_sha256` the root commits to, read from the `SessionStarted`
-/// event. `None` for a pre-WP-2 ledger that never recorded it. Read via `replay`
+/// event. `None` for an older ledger that never recorded it. Read via `replay`
 /// so signer and verifier resolve it identically.
 pub fn profile_sha256(session_id: &str, dir: &Path) -> Result<Option<String>, LedgerError> {
     let events = Ledger::replay(session_id, dir)?;

@@ -296,7 +296,7 @@ fn fsm_event_with_all_event_types_roundtrip() {
     }
 }
 
-// --- WP-2 transcript notary: additive-field wire compatibility -------------
+// --- transcript notary: additive-field wire compatibility ------------------
 
 /// NOT-13: a ledger written BEFORE this feature (no `profile_sha256` /
 /// `output_sha256` keys) still deserializes, with the new fields defaulting to
