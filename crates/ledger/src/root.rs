@@ -29,7 +29,7 @@ pub fn to_hex(bytes: &[u8]) -> String {
 }
 
 /// The RFC 6962 transcript root as a lowercase-hex string, over the session's
-/// ledger leaves. `Err` when the ledger file is absent (NOT-4: a missing ledger
+/// ledger leaves. `Err` when the ledger file is absent (a missing ledger
 /// is an error, never an empty tree) — see [`Ledger::lines`].
 pub fn transcript_root_hex(session_id: &str, dir: &Path) -> Result<String, LedgerError> {
     let leaves = Ledger::lines(session_id, dir)?;

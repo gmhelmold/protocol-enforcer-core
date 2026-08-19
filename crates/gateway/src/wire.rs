@@ -149,7 +149,7 @@ pub(crate) fn profile_sha256_of(path: &Path) -> Option<String> {
 }
 
 /// RFC 6962 transcript root over the session's now-final ledger. Called
-/// from the completion arm; best-effort (NOT-9/NOT-10) — if the ledger cannot be
+/// from the completion arm; best-effort — if the ledger cannot be
 /// read the root is omitted and a warning is logged, never failing a session
 /// that already completed.
 pub(crate) fn transcript_root_best_effort(session_id: &str) -> Option<String> {
@@ -174,7 +174,7 @@ fn transcript_root_in(session_id: &str, dir: &Path) -> Option<String> {
 
 /// The `protocol_submit_milestone` completion response (§6). The
 /// `transcript_root` key is OMITTED (not null) when it could not be computed —
-/// best-effort, NOT-10 — so a consumer can tell "no root issued" from a present
+/// best-effort — so a consumer can tell "no root issued" from a present
 /// value without a magic sentinel.
 pub(crate) fn completed_response_json(
     contract_path: Option<String>,
@@ -227,7 +227,7 @@ mod tests {
 
     #[test]
     fn transcript_root_missing_ledger_is_none() {
-        // NOT-10: a failed read yields None (the field is then omitted upstream),
+        // A failed read yields None (the field is then omitted upstream),
         // never a crash and never a well-formed root over nothing.
         let dir = tempfile::tempdir().unwrap();
         assert_eq!(transcript_root_in("absent", dir.path()), None);
@@ -243,7 +243,7 @@ mod tests {
     #[test]
     fn completed_response_omits_root_when_absent() {
         let r = completed_response_json(None, None);
-        // Key absent (not null) — NOT-10.
+        // Key absent (not null).
         assert!(r.get("transcript_root").is_none());
         assert_eq!(r["contract_written"], serde_json::json!(false));
     }

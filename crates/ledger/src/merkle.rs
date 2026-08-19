@@ -163,7 +163,7 @@ mod tests {
         items.iter().map(|s| s.to_vec()).collect()
     }
 
-    // --- NOT-5: reproduces §2's expression trees for n ∈ {0,1,2,3,7} ---------
+    // --- reproduces §2's expression trees for n ∈ {0,1,2,3,7} ---------
     // Each expected value is the exact expression tree from the SPEC, built from
     // the hand-spelled `lh`/`nh` (not from `root`), so this pins the definition.
 
@@ -204,7 +204,7 @@ mod tests {
         assert_eq!(root(&d), nh(&left, &right));
     }
 
-    // --- NOT-3: the 0x00 / 0x01 prefixes are actually applied ----------------
+    // --- the 0x00 / 0x01 prefixes are actually applied ----------------
 
     #[test]
     fn single_leaf_uses_leaf_prefix_not_raw() {
@@ -225,7 +225,7 @@ mod tests {
         assert_ne!(root(&d), h(&[&l0[..], &l1[..]].concat()));
     }
 
-    // --- NOT-5: agrees with an independent conforming implementation ---------
+    // --- agrees with an independent conforming implementation ---------
     // The reference is a genuinely different algorithm — the incremental,
     // stack-based construction a CT log uses when appending leaves one at a time
     // — checked against the top-down recursion in `root` on a deterministic
@@ -286,7 +286,7 @@ mod tests {
         }
     }
 
-    // --- NOT-6: inclusion proofs --------------------------------------------
+    // --- inclusion proofs --------------------------------------------
 
     #[test]
     fn proof_n3_leaf2_has_length_one() {

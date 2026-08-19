@@ -25,7 +25,7 @@ pub enum FsmEventType {
         /// SHA-256 (lowercase hex) of the profile file bytes as loaded, so the
         /// transcript root commits to the protocol in force. Additive: `default` +
         /// `skip_serializing_if` keep pre-feature ledgers deserializable and a
-        /// hash-less event byte-identical on the wire (NOT-12/NOT-13).
+        /// hash-less event byte-identical on the wire.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         profile_sha256: Option<String>,
     },
