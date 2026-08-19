@@ -148,7 +148,7 @@ pub(crate) fn profile_sha256_of(path: &Path) -> Option<String> {
     }
 }
 
-/// RFC 6962 transcript root over the session's now-final ledger (WP-1). Called
+/// RFC 6962 transcript root over the session's now-final ledger. Called
 /// from the completion arm; best-effort (NOT-9/NOT-10) — if the ledger cannot be
 /// read the root is omitted and a warning is logged, never failing a session
 /// that already completed.
@@ -215,9 +215,9 @@ mod tests {
     }
 
     #[test]
-    fn transcript_root_matches_wp1_over_the_same_ledger() {
-        // NOT-9 mechanism: the root the completion arm issues equals
-        // `merkle::root(Ledger::lines(..))` computed directly against WP-1.
+    fn transcript_root_matches_merkle_root_over_the_same_ledger() {
+        // The root the completion arm issues equals
+        // `merkle::root(Ledger::lines(..))` computed directly over the ledger.
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("s.jsonl"), b"line-a\nline-b\nline-c\n").unwrap();
         let leaves = Ledger::lines("s", dir.path()).unwrap();
